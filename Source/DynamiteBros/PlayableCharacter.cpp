@@ -13,10 +13,14 @@ APlayableCharacter::APlayableCharacter()
  	// turning off for now
 	PrimaryActorTick.bCanEverTick = false;
 
+	// Don't rotate when the controller rotates. Let that just affect the camera.
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
-
 
 }
 
@@ -70,14 +74,8 @@ void APlayableCharacter::Move(const FInputActionValue& Value){
 		// get right vector
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		// add rotation
-		// AddControllerYawInput(MovementVector.X);
-		// AddControllerPitchInput(MovementVector.Y);
-
 		// add movement
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
-
 	}
-
 }
