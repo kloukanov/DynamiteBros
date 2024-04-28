@@ -6,6 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Dynamite.h"
 
 // Sets default values
 APlayableCharacter::APlayableCharacter()
@@ -21,6 +22,11 @@ APlayableCharacter::APlayableCharacter()
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
+	GetCharacterMovement()->bIgnoreBaseRotation = true; // fix for physics bug that causes rotation on physics interaction
+
+	DynamiteSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point"));
+	DynamiteSpawnPoint->SetupAttachment(RootComponent);
+
 
 }
 
@@ -54,6 +60,8 @@ void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	if(UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)){
 		// move action
 		EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &APlayableCharacter::Move);
+		// drop dynamite action
+		EnhancedInputComponent->BindAction(DropInputAction, ETriggerEvent::Triggered, this, &APlayableCharacter::Drop);
 	}
 
 }
@@ -78,4 +86,14 @@ void APlayableCharacter::Move(const FInputActionValue& Value){
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
 	}
+}
+
+void APlayableCharacter::Drop() {
+	// UE_LOG(LogTemp, Warning, TEXT("drop triggered"));
+
+	FVector DynamiteSpawnPointLocation = DynamiteSpawnPoint->GetComponentLocation();
+	FRotator DynamiteSpawnPointRotation = DynamiteSpawnPoint->GetComponentRotation();
+
+	ADynamite* Dynamite = GetWorld()->SpawnActor<ADynamite>(DynamiteClass, DynamiteSpawnPointLocation, DynamiteSpawnPointRotation);
+	Dynamite->SetOwner(this);
 }

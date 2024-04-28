@@ -19,6 +19,17 @@ class DYNAMITEBROS_API APlayableCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* MoveInputAction;
 
+	// drop dynamite input action
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* DropInputAction;
+
+	// dynamite spawn point
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
+	USceneComponent* DynamiteSpawnPoint;
+
+	// ref to BP Dynamite class
+	UPROPERTY(EditDefaultsOnly, Category = Dynamite)
+	TSubclassOf<class ADynamite> DynamiteClass;
 
 public:
 	// Sets default values for this character's properties
@@ -30,6 +41,9 @@ protected:
 
 	// movement input
 	void Move(const struct FInputActionValue& Value);
+
+	// drop dynamite input
+	void Drop();
 
 public:	
 	// Called every frame
