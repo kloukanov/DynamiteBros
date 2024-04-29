@@ -34,4 +34,6 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Components)
 	class UProjectileMovementComponent* ProjectileMovementComponent;
 
+	void Explode();
+
 };
