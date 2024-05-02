@@ -2,6 +2,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "DestructibleComponent.h"
 
 ADynamite::ADynamite()
 {
@@ -34,18 +35,12 @@ void ADynamite::Tick(float DeltaTime)
 
 }
 
-void ADynamite::Explode() {
+bool ADynamite::HasExplosionHitAnyActors(FVector StartLocation, FVector EndLocation, FVector BoxSize, TArray<FHitResult, FDefaultAllocator> &OutHitActors) {
 
-	FVector StartLocation = GetActorLocation();
-	FVector EndLocation = StartLocation + FVector(500, 0, 0);
+	TArray<AActor* , FDefaultAllocator> IgnoreActors;
 
-	FVector BoxSize(80, 80, 30);
-	FHitResult Hit;
-
-	TArray<AActor *, FDefaultAllocator> IgnoreActors;
-
-	// will probably use BoxTraceMulti later to get all hit objects
-	bool bHitSomething = UKismetSystemLibrary::BoxTraceSingle
+	bool result =
+	UKismetSystemLibrary::BoxTraceMulti
 	(
 		this, 
 		StartLocation, 
@@ -56,16 +51,60 @@ void ADynamite::Explode() {
 		false, 
 		IgnoreActors, 
 		EDrawDebugTrace::Persistent, 
-		Hit, 
+		OutHitActors, 
 		true
 	);
 
-	if(bHitSomething){
-		AActor* HitActor = Hit.GetActor();
+	return result;
+}
+
+void ADynamite::Explode() {
+
+	FVector StartLocation = GetActorLocation();
+
+	int power = 600;
+
+	FVector EndLocationNorth = StartLocation + FVector(power, 0, 0);
+	FVector EndLocationSouth = StartLocation - FVector(power, 0, 0);
+	FVector EndLocationEast = StartLocation + FVector(0, power, 0);
+	FVector EndLocationWest = StartLocation - FVector(0, power, 0);
+	FVector ExplosionSize(50, 50, 30);
+
+	TArray<FHitResult , FDefaultAllocator> TotalHitActors;
+
+	TArray<FHitResult, FDefaultAllocator> HitActorsNorth;
+	TArray<FHitResult, FDefaultAllocator> HitActorsSouth;
+	TArray<FHitResult, FDefaultAllocator> HitActorsEast;
+	TArray<FHitResult, FDefaultAllocator> HitActorsWest;
+
+
+	bool bHitSomethingNorth = HasExplosionHitAnyActors(StartLocation, EndLocationNorth, ExplosionSize, HitActorsNorth);
+	bool bHitSomethingSouth = HasExplosionHitAnyActors(StartLocation, EndLocationSouth, ExplosionSize, HitActorsSouth);
+
+	bool bHitSomethingEast = HasExplosionHitAnyActors(StartLocation, EndLocationEast, ExplosionSize, HitActorsEast);
+	bool bHitSomethingWest = HasExplosionHitAnyActors(StartLocation, EndLocationWest, ExplosionSize, HitActorsWest);
+
+	TotalHitActors.Append(HitActorsNorth);
+	TotalHitActors.Append(HitActorsSouth);
+	TotalHitActors.Append(HitActorsEast);
+	TotalHitActors.Append(HitActorsWest);
+
+	if(TotalHitActors.Num() > 0){
+		HandleExplotionCollision(TotalHitActors);
+	}
+
+}
+
+void ADynamite::HandleExplotionCollision(TArray<FHitResult, FDefaultAllocator> OutHitActors) {
+	for(int i = 0; i < OutHitActors.Num(); i++) {
+		AActor* HitActor = OutHitActors[i].GetActor();
 		
 		if(HitActor){
 			UE_LOG(LogTemp, Warning, TEXT("we hit an actor with name %s"), *HitActor->GetActorNameOrLabel());
+			UActorComponent * ActorComponent  =  HitActor->GetComponentByClass(UDestructibleComponent::StaticClass());
+			if(ActorComponent){
+				UE_LOG(LogTemp, Warning, TEXT("we in here with the actor component breh %s"), *HitActor->GetActorNameOrLabel());
+			}
 		}
 	}
-
 }

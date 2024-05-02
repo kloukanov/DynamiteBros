@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Dynamite.generated.h"
+#include "Obstacle.generated.h"
 
 UCLASS()
-class DYNAMITEBROS_API ADynamite : public AActor
+class DYNAMITEBROS_API AObstacle : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ADynamite();
+	AObstacle();
 
 protected:
 	// Called when the game starts or when spawned
@@ -29,15 +29,6 @@ private:
 	class UBoxComponent* BoxComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = Mesh)
-	class UStaticMeshComponent* DynamiteMesh;
-
-	UPROPERTY(VisibleAnywhere, Category = Components)
-	class UProjectileMovementComponent* ProjectileMovementComponent;
-
-	void Explode();
-
-	bool HasExplosionHitAnyActors(FVector StartLocation, FVector EndLocation, FVector BoxSize, TArray<FHitResult> &OutHitActors);
-
-	void HandleExplotionCollision(TArray<FHitResult, FDefaultAllocator> OutHitActors);
+	class UStaticMeshComponent* ObstacleMesh;
 
 };
