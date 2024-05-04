@@ -36,8 +36,16 @@ private:
 
 	void Explode();
 
-	bool HasExplosionHitAnyActors(FVector StartLocation, FVector EndLocation, FVector Offset, TArray<FHitResult> &OutHitActors);
+	void DoExplosion(FVector StartLocation, FVector EndLocation, FVector Offset, TArray<FHitResult> &OutHitActors);
 
 	void HandleExplosionCollision(TArray<FHitResult> OutHitActors);
 
+	UPROPERTY(EditDefaultsOnly, Category = Explosion)
+	FVector ExplosionLineTraceOffsetY = FVector(0, 20.f, 0);
+
+	UPROPERTY(EditDefaultsOnly, Category = Explosion)
+	FVector ExplosionLineTraceOffsetX = FVector(20.f, 0, 0);
+
+	UPROPERTY(EditDefaultsOnly, Category = Explosion)
+	int ExplosionPower = 600;
 };
