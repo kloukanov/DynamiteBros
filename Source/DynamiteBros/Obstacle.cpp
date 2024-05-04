@@ -19,6 +19,12 @@ void AObstacle::BeginPlay()
 	
 }
 
+void AObstacle::HandleDestruction() {
+	if(IsDestructible){
+		Destroy();
+	}
+}
+
 void AObstacle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

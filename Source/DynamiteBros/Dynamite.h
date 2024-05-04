@@ -36,8 +36,8 @@ private:
 
 	void Explode();
 
-	bool HasExplosionHitAnyActors(FVector StartLocation, FVector EndLocation, FVector BoxSize, TArray<FHitResult> &OutHitActors);
+	bool HasExplosionHitAnyActors(FVector StartLocation, FVector EndLocation, FVector Offset, TArray<FHitResult> &OutHitActors);
 
-	void HandleExplotionCollision(TArray<FHitResult, FDefaultAllocator> OutHitActors);
+	void HandleExplosionCollision(TArray<FHitResult> OutHitActors);
 
 };

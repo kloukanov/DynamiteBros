@@ -3,6 +3,8 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "DestructibleComponent.h"
+#include "Obstacle.h"
+#include "DrawDebugHelpers.h"
 
 ADynamite::ADynamite()
 {
@@ -35,27 +37,22 @@ void ADynamite::Tick(float DeltaTime)
 
 }
 
-bool ADynamite::HasExplosionHitAnyActors(FVector StartLocation, FVector EndLocation, FVector BoxSize, TArray<FHitResult, FDefaultAllocator> &OutHitActors) {
+bool ADynamite::HasExplosionHitAnyActors(FVector StartLocation, FVector EndLocation, FVector Offset, TArray<FHitResult> &OutHitActors) {
+	
+	TArray<FHitResult> AllActors;
 
-	TArray<AActor* , FDefaultAllocator> IgnoreActors;
+	FVector TempOffset = Offset;
 
-	bool result =
-	UKismetSystemLibrary::BoxTraceMulti
-	(
-		this, 
-		StartLocation, 
-		EndLocation, 
-		BoxSize, 
-		FRotator::ZeroRotator, 
-		ETraceTypeQuery::TraceTypeQuery1, // take a look at the collision settings later
-		false, 
-		IgnoreActors, 
-		EDrawDebugTrace::Persistent, 
-		OutHitActors, 
-		true
-	);
+	for(int i = 0; i < 3; i++) {
+		GetWorld()->LineTraceMultiByChannel(OutHitActors, StartLocation + TempOffset, EndLocation + TempOffset, ECollisionChannel::ECC_GameTraceChannel1);
+		DrawDebugLine(GetWorld(), StartLocation + TempOffset, EndLocation + TempOffset, FColor::Red, true, 5);
+		TempOffset = TempOffset - Offset;
+		AllActors.Append(OutHitActors);
+	}
 
-	return result;
+	OutHitActors = AllActors;
+
+	return AllActors.Num() > 0;
 }
 
 void ADynamite::Explode() {
@@ -68,21 +65,22 @@ void ADynamite::Explode() {
 	FVector EndLocationSouth = StartLocation - FVector(power, 0, 0);
 	FVector EndLocationEast = StartLocation + FVector(0, power, 0);
 	FVector EndLocationWest = StartLocation - FVector(0, power, 0);
-	FVector ExplosionSize(50, 50, 30);
+	FVector OffsetY(0, 20.f, 0);
+	FVector OffsetX(20.f, 0, 0);
 
-	TArray<FHitResult , FDefaultAllocator> TotalHitActors;
+	TArray<FHitResult> TotalHitActors;
 
-	TArray<FHitResult, FDefaultAllocator> HitActorsNorth;
-	TArray<FHitResult, FDefaultAllocator> HitActorsSouth;
-	TArray<FHitResult, FDefaultAllocator> HitActorsEast;
-	TArray<FHitResult, FDefaultAllocator> HitActorsWest;
+	TArray<FHitResult> HitActorsNorth;
+	TArray<FHitResult> HitActorsSouth;
+	TArray<FHitResult> HitActorsEast;
+	TArray<FHitResult> HitActorsWest;
 
 
-	bool bHitSomethingNorth = HasExplosionHitAnyActors(StartLocation, EndLocationNorth, ExplosionSize, HitActorsNorth);
-	bool bHitSomethingSouth = HasExplosionHitAnyActors(StartLocation, EndLocationSouth, ExplosionSize, HitActorsSouth);
+	bool bHitSomethingNorth = HasExplosionHitAnyActors(StartLocation, EndLocationNorth, OffsetY, HitActorsNorth);
+	bool bHitSomethingSouth = HasExplosionHitAnyActors(StartLocation, EndLocationSouth, -(OffsetY), HitActorsSouth);
 
-	bool bHitSomethingEast = HasExplosionHitAnyActors(StartLocation, EndLocationEast, ExplosionSize, HitActorsEast);
-	bool bHitSomethingWest = HasExplosionHitAnyActors(StartLocation, EndLocationWest, ExplosionSize, HitActorsWest);
+	bool bHitSomethingEast = HasExplosionHitAnyActors(StartLocation, EndLocationEast, OffsetX, HitActorsEast);
+	bool bHitSomethingWest = HasExplosionHitAnyActors(StartLocation, EndLocationWest, -(OffsetX), HitActorsWest);
 
 	TotalHitActors.Append(HitActorsNorth);
 	TotalHitActors.Append(HitActorsSouth);
@@ -90,21 +88,30 @@ void ADynamite::Explode() {
 	TotalHitActors.Append(HitActorsWest);
 
 	if(TotalHitActors.Num() > 0){
-		HandleExplotionCollision(TotalHitActors);
+		HandleExplosionCollision(TotalHitActors);
 	}
 
 }
 
-void ADynamite::HandleExplotionCollision(TArray<FHitResult, FDefaultAllocator> OutHitActors) {
+void ADynamite::HandleExplosionCollision(TArray<FHitResult> OutHitActors) {
 	for(int i = 0; i < OutHitActors.Num(); i++) {
 		AActor* HitActor = OutHitActors[i].GetActor();
 		
 		if(HitActor){
 			UE_LOG(LogTemp, Warning, TEXT("we hit an actor with name %s"), *HitActor->GetActorNameOrLabel());
-			UActorComponent * ActorComponent  =  HitActor->GetComponentByClass(UDestructibleComponent::StaticClass());
-			if(ActorComponent){
-				UE_LOG(LogTemp, Warning, TEXT("we in here with the actor component breh %s"), *HitActor->GetActorNameOrLabel());
-			}
+
+			AObstacle *HitObstacle = Cast<AObstacle>(HitActor);
+
+			if(HitObstacle){
+				HitObstacle->HandleDestruction();
+			} 
+
+			// TODO: come back to this to include the destructible component logic 
+
+			// UActorComponent * ActorComponent  =  HitActor->GetComponentByClass(UDestructibleComponent::StaticClass());
+			// if(ActorComponent){
+			// 	UE_LOG(LogTemp, Warning, TEXT("we in here with the actor component breh %s"), *HitActor->GetActorNameOrLabel());
+			// }
 		}
 	}
 }

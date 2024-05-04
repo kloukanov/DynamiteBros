@@ -15,6 +15,8 @@ public:
 	// Sets default values for this actor's properties
 	AObstacle();
 
+	void HandleDestruction();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -30,5 +32,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Mesh)
 	class UStaticMeshComponent* ObstacleMesh;
+
+	UPROPERTY(EditAnywhere, Category = Destructible)
+	bool IsDestructible;
 
 };
