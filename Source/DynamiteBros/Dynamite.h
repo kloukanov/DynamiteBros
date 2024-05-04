@@ -48,4 +48,10 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Explosion)
 	int ExplosionPower = 600;
+
+	UPROPERTY(EditDefaultsOnly, Category = Explosion)
+	float ExplosionTimer = 3.f;
+
+	FTimerHandle ExplosionTimerHandle;
+
 };

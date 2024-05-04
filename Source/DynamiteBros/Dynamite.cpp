@@ -26,14 +26,31 @@ void ADynamite::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// will move to tick later and have a countdown and anim
-	Explode();
+	GetWorldTimerManager().SetTimer(ExplosionTimerHandle, this, &ADynamite::Explode, ExplosionTimer, false);
 }
 
 void ADynamite::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ADynamite::Explode() {
+
+	FVector StartLocation = GetActorLocation();
+
+	TArray<FHitResult> TotalHitActors;
+
+	DoExplosion(StartLocation, StartLocation + FVector(ExplosionPower, 0, 0), ExplosionLineTraceOffsetY, TotalHitActors); // north
+	DoExplosion(StartLocation, StartLocation - FVector(ExplosionPower, 0, 0), -(ExplosionLineTraceOffsetY), TotalHitActors); // south
+	DoExplosion(StartLocation, StartLocation + FVector(0, ExplosionPower, 0), ExplosionLineTraceOffsetX, TotalHitActors); // east
+	DoExplosion(StartLocation, StartLocation - FVector(0, ExplosionPower, 0), -(ExplosionLineTraceOffsetX), TotalHitActors); // west
+
+	if(TotalHitActors.Num() > 0){
+		HandleExplosionCollision(TotalHitActors);
+	}
+
+	Destroy();
 }
 
 void ADynamite::DoExplosion(FVector StartLocation, FVector EndLocation, FVector Offset, TArray<FHitResult> &OutHitActors) {
@@ -54,21 +71,6 @@ void ADynamite::DoExplosion(FVector StartLocation, FVector EndLocation, FVector 
 	}
 
 	OutHitActors.Append(AllActors);
-}
-
-void ADynamite::Explode() {
-
-	FVector StartLocation = GetActorLocation();
-	TArray<FHitResult> TotalHitActors;
-
-	DoExplosion(StartLocation, StartLocation + FVector(ExplosionPower, 0, 0), ExplosionLineTraceOffsetY, TotalHitActors);
-	DoExplosion(StartLocation, StartLocation - FVector(ExplosionPower, 0, 0), -(ExplosionLineTraceOffsetY), TotalHitActors);
-	DoExplosion(StartLocation, StartLocation + FVector(0, ExplosionPower, 0), ExplosionLineTraceOffsetX, TotalHitActors);
-	DoExplosion(StartLocation, StartLocation - FVector(0, ExplosionPower, 0), -(ExplosionLineTraceOffsetX), TotalHitActors);
-
-	if(TotalHitActors.Num() > 0){
-		HandleExplosionCollision(TotalHitActors);
-	}
 }
 
 void ADynamite::HandleExplosionCollision(TArray<FHitResult> OutHitActors) {
