@@ -40,6 +40,8 @@ private:
 
 	void HandleExplosionCollision(TArray<FHitResult> OutHitActors);
 
+	void SpawnExplosionEffect(FRotator Rotation);
+
 	UPROPERTY(EditDefaultsOnly, Category = Explosion)
 	FVector ExplosionLineTraceOffsetY = FVector(0, 20.f, 0);
 
@@ -51,6 +53,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Explosion)
 	float ExplosionTimer = 3.f;
+
+	UPROPERTY(EditAnywhere, Category = Explosion, meta = (AllowPrivateAccess = "true"))
+	class UNiagaraSystem* ExplosionEffect;
 
 	FTimerHandle ExplosionTimerHandle;
 

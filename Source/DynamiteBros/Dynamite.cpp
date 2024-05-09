@@ -4,6 +4,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Obstacle.h"
 #include "DrawDebugHelpers.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 ADynamite::ADynamite()
 {
@@ -59,6 +61,10 @@ void ADynamite::DoExplosion(FVector StartLocation, FVector EndLocation, FVector 
 
 	FVector TempOffset = Offset;
 
+	FVector ExplosionDirection = ((StartLocation + TempOffset) - (EndLocation + TempOffset)).GetSafeNormal();
+	
+	SpawnExplosionEffect(ExplosionDirection.Rotation());
+
 	for(int i = 0; i < 3; i++) {
 		TArray<FHitResult> TempHitActors;
 
@@ -86,5 +92,11 @@ void ADynamite::HandleExplosionCollision(TArray<FHitResult> OutHitActors) {
 				HitObstacle->HandleDestruction();
 			} 
 		}
+	}
+}
+
+void ADynamite::SpawnExplosionEffect(FRotator Rotation) {
+	if(ExplosionEffect) {
+			UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ExplosionEffect, GetActorLocation(), Rotation);
 	}
 }
