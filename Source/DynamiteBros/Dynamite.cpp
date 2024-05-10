@@ -69,7 +69,9 @@ void ADynamite::DoExplosion(FVector StartLocation, FVector EndLocation, FVector 
 		TArray<FHitResult> TempHitActors;
 
 		GetWorld()->LineTraceMultiByChannel(TempHitActors, StartLocation + TempOffset, EndLocation + TempOffset, ECollisionChannel::ECC_GameTraceChannel1);
-		DrawDebugLine(GetWorld(), StartLocation + TempOffset, EndLocation + TempOffset, FColor::Red, true, 5);
+		if(ShowTraceLines){
+			DrawDebugLine(GetWorld(), StartLocation + TempOffset, EndLocation + TempOffset, FColor::Red, true, 5);
+		}
 
 		AllActors.Append(TempHitActors);
 		TempHitActors.Empty();
@@ -97,6 +99,9 @@ void ADynamite::HandleExplosionCollision(TArray<FHitResult> OutHitActors) {
 
 void ADynamite::SpawnExplosionEffect(FRotator Rotation) {
 	if(ExplosionEffect) {
-			UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ExplosionEffect, GetActorLocation(), Rotation);
+		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ExplosionEffect, GetActorLocation(), Rotation);
+		// temporarly config params here but later probably get them from PlayableCharacter class by using GetOwner() and then accessing some sort of config/abilities class
+		NiagaraComp->SetVariableLinearColor(FName("Color"), ExplosionColor);
+		NiagaraComp->SetVariableFloat(FName("Velocity_Speed"), ExplosionPower * 4);
 	}
 }

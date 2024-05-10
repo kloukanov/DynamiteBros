@@ -23,6 +23,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere, Category = Traces)
+	bool ShowTraceLines = false;
+
 private:
 
 	UPROPERTY(VisibleAnywhere, Category = Components)
@@ -56,6 +59,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Explosion, meta = (AllowPrivateAccess = "true"))
 	class UNiagaraSystem* ExplosionEffect;
+
+	UPROPERTY(EditAnywhere, Category = Explosion, meta = (AllowPrivateAccess = "true"))
+	FLinearColor ExplosionColor;
 
 	FTimerHandle ExplosionTimerHandle;
 
