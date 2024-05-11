@@ -97,3 +97,11 @@ void APlayableCharacter::Drop() {
 	ADynamite* Dynamite = GetWorld()->SpawnActor<ADynamite>(DynamiteClass, DynamiteSpawnPointLocation, DynamiteSpawnPointRotation);
 	Dynamite->SetOwner(this);
 }
+
+void APlayableCharacter::SetSpeed(float Speed) {
+	GetCharacterMovement()->MaxWalkSpeed = Speed;
+}
+
+float APlayableCharacter::GetSpeed() const {
+	return GetCharacterMovement()->MaxWalkSpeed;
+}

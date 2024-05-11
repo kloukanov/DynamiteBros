@@ -55,6 +55,8 @@ void ADynamite::Explode() {
 	Destroy();
 }
 
+// this function does 3 ray casts in provided direction
+// another way to do this would probably be to create a FCollisionShape and then use SweepMultipleByChannel() with the shape? 
 void ADynamite::DoExplosion(FVector StartLocation, FVector EndLocation, FVector Offset, TArray<FHitResult> &OutHitActors) {
 	
 	TArray<FHitResult> AllActors;

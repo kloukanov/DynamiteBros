@@ -35,6 +35,10 @@ public:
 	// Sets default values for this character's properties
 	APlayableCharacter();
 
+	void SetSpeed(float Speed);
+
+	float GetSpeed() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
