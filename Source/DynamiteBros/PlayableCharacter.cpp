@@ -89,13 +89,28 @@ void APlayableCharacter::Move(const FInputActionValue& Value){
 }
 
 void APlayableCharacter::Drop() {
-	// UE_LOG(LogTemp, Warning, TEXT("drop triggered"));
+	
+	// if we have a dynamite to drop
+	if(DynamiteCount > 0){
+		FVector DynamiteSpawnPointLocation = DynamiteSpawnPoint->GetComponentLocation();
+		FRotator DynamiteSpawnPointRotation = DynamiteSpawnPoint->GetComponentRotation();
 
-	FVector DynamiteSpawnPointLocation = DynamiteSpawnPoint->GetComponentLocation();
-	FRotator DynamiteSpawnPointRotation = DynamiteSpawnPoint->GetComponentRotation();
+		ADynamite* Dynamite = GetWorld()->SpawnActor<ADynamite>(DynamiteClass, DynamiteSpawnPointLocation, DynamiteSpawnPointRotation);
+		Dynamite->SetOwner(this);
+		RemoveDynamite();
+	}
+}
 
-	ADynamite* Dynamite = GetWorld()->SpawnActor<ADynamite>(DynamiteClass, DynamiteSpawnPointLocation, DynamiteSpawnPointRotation);
-	Dynamite->SetOwner(this);
+int APlayableCharacter::GetDynamiteCount() const {
+	return DynamiteCount;
+}
+
+void APlayableCharacter::AddDynamite() {
+	DynamiteCount++;
+}
+
+void APlayableCharacter::RemoveDynamite() {
+	DynamiteCount--;
 }
 
 void APlayableCharacter::SetSpeed(float Speed) {

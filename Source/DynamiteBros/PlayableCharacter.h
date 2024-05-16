@@ -37,6 +37,9 @@ class DYNAMITEBROS_API APlayableCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, Category = Explosion, meta = (AllowPrivateAccess = "true"))
 	FLinearColor ExplosionColor;
 
+	UPROPERTY(EditAnywhere, Category = Explosion, meta = (AllowPrivateAccess = "true"))
+	int DynamiteCount = 1;
+
 public:
 	// Sets default values for this character's properties
 	APlayableCharacter();
@@ -50,6 +53,12 @@ public:
 	void SetExplosionPower(int ExplosionPower);
 
 	FLinearColor GetExplosionColor() const;
+
+	int GetDynamiteCount() const;
+
+	void AddDynamite();
+
+	void RemoveDynamite();
 
 protected:
 	// Called when the game starts or when spawned

@@ -57,6 +57,11 @@ void ADynamite::Explode() {
 		HandleExplosionCollision(TotalHitActors);
 	}
 
+	// before we destroy, add a dynamite back to the DynamiteCount of player
+	if(PlayerCharacter){
+		PlayerCharacter->AddDynamite();
+	}
+
 	Destroy();
 }
 
