@@ -28,7 +28,7 @@ void AAbilityBase::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent
 	UE_LOG(LogTemp, Warning, TEXT("we collided with an actor with name %s"), *OtherActor->GetActorNameOrLabel());
 	APlayableCharacter* Player = Cast<APlayableCharacter>(OtherActor);
 	if(Player){
-		AddAbilityToPlayer(Player);
+		AddAbilityToPlayer(*Player);
 		BoxComponent->OnComponentBeginOverlap.RemoveAll(this);
 	}
 }

@@ -18,7 +18,7 @@ public:
 	ASpeedAbility();
 
 protected:	
-	virtual void AddAbilityToPlayer(class APlayableCharacter *Player) override;
+	virtual void AddAbilityToPlayer(class APlayableCharacter &Player) override;
 
 private:
 

@@ -5,13 +5,13 @@
 #include "../PlayableCharacter.h"
 
 AExplosionMultiplierAbility::AExplosionMultiplierAbility(){
-     AbilityName = "Explosion Multiplier Ability";
+    AbilityName = "Explosion Multiplier Ability";
 }
 
-void AExplosionMultiplierAbility::AddAbilityToPlayer(APlayableCharacter *Player){
+void AExplosionMultiplierAbility::AddAbilityToPlayer(APlayableCharacter &Player){
     UE_LOG(LogTemp, Warning, TEXT("collected ability %s "), *AbilityName);
-    if(Player->GetExplosionPower() < Max){
-        Player->SetExplosionPower(Player->GetExplosionPower() + ExplosionIncrease);
+    if(Player.GetExplosionPower() < Max){
+        Player.SetExplosionPower(Player.GetExplosionPower() + ExplosionIncrease);
     }
 
     HandleDestruction();

@@ -21,7 +21,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = Ability)
 	FString AbilityName; 
 
-	virtual void AddAbilityToPlayer(class APlayableCharacter *Player) {}
+	virtual void AddAbilityToPlayer(class APlayableCharacter &Player) {}
 
 	void HandleDestruction();
 

@@ -8,10 +8,10 @@ ASpeedAbility::ASpeedAbility() {
     AbilityName = "Speed Increase";
 }
 
-void ASpeedAbility::AddAbilityToPlayer(APlayableCharacter *Player){
-    UE_LOG(LogTemp, Warning, TEXT("collected ability %s and the player speed is: %f"), *AbilityName, Player->GetSpeed());
-    if(Player->GetSpeed() < MaxSpeed){
-        Player->SetSpeed(Player->GetSpeed() + SpeedIncrease);
+void ASpeedAbility::AddAbilityToPlayer(APlayableCharacter &Player){
+    UE_LOG(LogTemp, Warning, TEXT("collected ability %s and the player speed is: %f"), *AbilityName, Player.GetSpeed());
+    if(Player.GetSpeed() < MaxSpeed){
+        Player.SetSpeed(Player.GetSpeed() + SpeedIncrease);
     }
 
     HandleDestruction();
