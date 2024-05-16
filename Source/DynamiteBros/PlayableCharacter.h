@@ -31,6 +31,12 @@ class DYNAMITEBROS_API APlayableCharacter : public ACharacter
 	UPROPERTY(EditDefaultsOnly, Category = Dynamite)
 	TSubclassOf<class ADynamite> DynamiteClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = Explosion, meta = (AllowPrivateAccess = "true"))
+	int ExplosionPower = 200;
+
+	UPROPERTY(EditAnywhere, Category = Explosion, meta = (AllowPrivateAccess = "true"))
+	FLinearColor ExplosionColor;
+
 public:
 	// Sets default values for this character's properties
 	APlayableCharacter();
@@ -38,6 +44,12 @@ public:
 	void SetSpeed(float Speed);
 
 	float GetSpeed() const;
+
+	int GetExplosionPower() const;
+
+	void SetExplosionPower(int ExplosionPower);
+
+	FLinearColor GetExplosionColor() const;
 
 protected:
 	// Called when the game starts or when spawned

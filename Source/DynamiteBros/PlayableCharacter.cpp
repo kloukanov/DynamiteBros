@@ -105,3 +105,15 @@ void APlayableCharacter::SetSpeed(float Speed) {
 float APlayableCharacter::GetSpeed() const {
 	return GetCharacterMovement()->MaxWalkSpeed;
 }
+
+void APlayableCharacter::SetExplosionPower(int Power) {
+	ExplosionPower = Power;
+}
+
+int APlayableCharacter::GetExplosionPower() const {
+	return ExplosionPower;
+}
+
+FLinearColor APlayableCharacter::GetExplosionColor() const {
+	return ExplosionColor;
+}

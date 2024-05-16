@@ -52,16 +52,10 @@ private:
 	FVector ExplosionLineTraceOffsetX = FVector(20.f, 0, 0);
 
 	UPROPERTY(EditDefaultsOnly, Category = Explosion)
-	int ExplosionPower = 600;
-
-	UPROPERTY(EditDefaultsOnly, Category = Explosion)
 	float ExplosionTimer = 3.f;
 
 	UPROPERTY(EditAnywhere, Category = Explosion, meta = (AllowPrivateAccess = "true"))
 	class UNiagaraSystem* ExplosionEffect;
-
-	UPROPERTY(EditAnywhere, Category = Explosion, meta = (AllowPrivateAccess = "true"))
-	FLinearColor ExplosionColor;
 
 	FTimerHandle ExplosionTimerHandle;
 

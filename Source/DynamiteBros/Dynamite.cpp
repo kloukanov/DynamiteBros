@@ -6,6 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "PlayableCharacter.h"
 
 ADynamite::ADynamite()
 {
@@ -43,10 +44,14 @@ void ADynamite::Explode() {
 
 	TArray<FHitResult> TotalHitActors;
 
-	DoExplosion(StartLocation, StartLocation + FVector(ExplosionPower, 0, 0), ExplosionLineTraceOffsetY, TotalHitActors); // north
-	DoExplosion(StartLocation, StartLocation - FVector(ExplosionPower, 0, 0), -(ExplosionLineTraceOffsetY), TotalHitActors); // south
-	DoExplosion(StartLocation, StartLocation + FVector(0, ExplosionPower, 0), ExplosionLineTraceOffsetX, TotalHitActors); // east
-	DoExplosion(StartLocation, StartLocation - FVector(0, ExplosionPower, 0), -(ExplosionLineTraceOffsetX), TotalHitActors); // west
+	APlayableCharacter* PlayerCharacter = Cast<APlayableCharacter>(GetOwner());
+
+	if(PlayerCharacter){
+		DoExplosion(StartLocation, StartLocation + FVector(PlayerCharacter->GetExplosionPower(), 0, 0), ExplosionLineTraceOffsetY, TotalHitActors); // north
+		DoExplosion(StartLocation, StartLocation - FVector(PlayerCharacter->GetExplosionPower(), 0, 0), -(ExplosionLineTraceOffsetY), TotalHitActors); // south
+		DoExplosion(StartLocation, StartLocation + FVector(0, PlayerCharacter->GetExplosionPower(), 0), ExplosionLineTraceOffsetX, TotalHitActors); // east
+		DoExplosion(StartLocation, StartLocation - FVector(0, PlayerCharacter->GetExplosionPower(), 0), -(ExplosionLineTraceOffsetX), TotalHitActors); // west
+	}
 
 	if(TotalHitActors.Num() > 0){
 		HandleExplosionCollision(TotalHitActors);
@@ -100,10 +105,11 @@ void ADynamite::HandleExplosionCollision(TArray<FHitResult> OutHitActors) {
 }
 
 void ADynamite::SpawnExplosionEffect(FRotator Rotation) {
-	if(ExplosionEffect) {
+	APlayableCharacter* PlayerCharacter = Cast<APlayableCharacter>(GetOwner());
+
+	if(ExplosionEffect && PlayerCharacter) {
 		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ExplosionEffect, GetActorLocation(), Rotation);
-		// temporarly config params here but later probably get them from PlayableCharacter class by using GetOwner() and then accessing some sort of config/abilities class
-		NiagaraComp->SetVariableLinearColor(FName("Color"), ExplosionColor);
-		NiagaraComp->SetVariableFloat(FName("Velocity_Speed"), ExplosionPower * 4);
+		NiagaraComp->SetVariableLinearColor(FName("Color"), PlayerCharacter->GetExplosionColor());
+		NiagaraComp->SetVariableFloat(FName("Velocity_Speed"), PlayerCharacter->GetExplosionPower() * 4);
 	}
 }
