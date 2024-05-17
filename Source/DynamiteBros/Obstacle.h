@@ -36,4 +36,15 @@ private:
 	UPROPERTY(EditAnywhere, Category = Destructible)
 	bool IsDestructible;
 
+	// ability spawn point
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
+	USceneComponent* AbilitySpawnPoint;
+
+	UPROPERTY(EditAnywhere, Category = Ability, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UAbilityFactory> AbilityFactoryClass;
+
+	UPROPERTY(EditAnywhere, Category = Ability, meta = (AllowPrivateAccess = "true"))
+	int SpawnProbability = 3;
+
+	void SpawnAbility();
 };

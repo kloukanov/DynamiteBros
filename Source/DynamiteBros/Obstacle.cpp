@@ -1,5 +1,6 @@
 #include "Obstacle.h"
 #include "Components/BoxComponent.h"
+#include "Abilities/AbilityFactory.h"
 
 AObstacle::AObstacle()
 {
@@ -11,6 +12,8 @@ AObstacle::AObstacle()
 	ObstacleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Obstacle Mesh"));
 	ObstacleMesh->SetupAttachment(BoxComponent);
 
+	AbilitySpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point"));
+	AbilitySpawnPoint->SetupAttachment(RootComponent);
 }
 
 void AObstacle::BeginPlay()
@@ -21,6 +24,7 @@ void AObstacle::BeginPlay()
 
 void AObstacle::HandleDestruction() {
 	if(IsDestructible){
+		SpawnAbility();
 		Destroy();
 	}
 }
@@ -31,3 +35,13 @@ void AObstacle::Tick(float DeltaTime)
 
 }
 
+void AObstacle::SpawnAbility() {
+
+	int Probability = FMath::RandRange(1, SpawnProbability);
+
+	if(Probability == 1) {
+		FVector SpawnLocation = AbilitySpawnPoint->GetComponentLocation();
+		UAbilityFactory* Factory = NewObject<UAbilityFactory>(GetWorld(), AbilityFactoryClass);
+		Factory->CreateRandomAbility(GetWorld(), SpawnLocation, FRotator::ZeroRotator);
+	}
+}
