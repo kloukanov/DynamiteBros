@@ -14,6 +14,8 @@ class DYNAMITEBROS_API AAbilityBase : public AActor
 public:	
 	AAbilityBase();
 
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 
 	virtual void BeginPlay() override;

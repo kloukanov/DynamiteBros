@@ -4,7 +4,7 @@
 
 AAbilityBase::AAbilityBase()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
 	RootComponent = BoxComponent;
@@ -19,6 +19,16 @@ void AAbilityBase::BeginPlay() {
 	if(BoxComponent)
 	{
 		BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AAbilityBase::OnSphereBeginOverlap);
+	}
+
+}
+
+void AAbilityBase::Tick(float DeltaTime){
+	Super::Tick(DeltaTime);
+
+	if(AbilityMesh) {
+		FRotator Rotation = AbilityMesh->GetComponentRotation() + FRotator(0, 90 * DeltaTime, 0);
+		AbilityMesh->SetRelativeRotation(Rotation);
 	}
 
 }

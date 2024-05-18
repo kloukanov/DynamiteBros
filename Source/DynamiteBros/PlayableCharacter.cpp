@@ -93,7 +93,8 @@ void APlayableCharacter::Drop() {
 	// if we have a dynamite to drop
 	if(DynamiteCount > 0){
 		FVector DynamiteSpawnPointLocation = DynamiteSpawnPoint->GetComponentLocation();
-		FRotator DynamiteSpawnPointRotation = DynamiteSpawnPoint->GetComponentRotation();
+		float RandomOffset = FMath::RandRange(0.f, 90.f);
+		FRotator DynamiteSpawnPointRotation = DynamiteSpawnPoint->GetComponentRotation() + FRotator(0, RandomOffset, 0);
 
 		ADynamite* Dynamite = GetWorld()->SpawnActor<ADynamite>(DynamiteClass, DynamiteSpawnPointLocation, DynamiteSpawnPointRotation);
 		Dynamite->SetOwner(this);
