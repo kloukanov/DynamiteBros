@@ -13,6 +13,9 @@ void AEnemyAIController::BeginPlay() {
 
         if(AIPawn && PlayerPawn){
             GetBlackboardComponent()->SetValueAsObject(TEXT("Player"), PlayerPawn);
+            TargetLocation = GetPawn()->GetActorLocation();
+            GetBlackboardComponent()->SetValueAsVector(TEXT("TargetLocation"), TargetLocation);
+            GetBlackboardComponent()->SetValueAsBool(TEXT("IsAIStuck"), IsAIStuck);
         }
     
     }

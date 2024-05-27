@@ -22,5 +22,11 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = AI)
 	class UBehaviorTree* AIBehavior;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+	FVector TargetLocation = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+	bool IsAIStuck = false;
 	
 };
