@@ -21,7 +21,7 @@ void UBTService_DefaultTargetLocation::TickNode(UBehaviorTreeComponent &OwnerCom
         ||
         IsTargetLocationReached(
             OwnerComp.GetAIOwner()->GetPawn()->GetActorLocation(), 
-            OwnerComp.GetBlackboardComponent()->GetValueAsVector(GetSelectedBlackboardKey()), 200.f)
+            OwnerComp.GetBlackboardComponent()->GetValueAsVector(GetSelectedBlackboardKey()), 50.f)
         ){
         
         float RandomX = FMath::RandRange(MIN_X, MAX_X);

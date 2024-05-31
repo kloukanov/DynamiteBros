@@ -28,5 +28,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = AI)
 	bool IsAIStuck = false;
-	
+
+public:	
+	virtual void Tick(float DeltaTime) override;
 };
