@@ -9,6 +9,8 @@ UBTService_UpdateDropDynamite::UBTService_UpdateDropDynamite(){
 
 void UBTService_UpdateDropDynamite::TickNode(UBehaviorTreeComponent &OwnerComp, uint8 *NodeMemory, float DeltaSeconds) {
 
+    Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
+
     UE_LOG(LogTemp, Warning, TEXT("next drop is %f, count is %f"), NextDrop, CurrentCount);
 
     if(CurrentCount >= NextDrop){
