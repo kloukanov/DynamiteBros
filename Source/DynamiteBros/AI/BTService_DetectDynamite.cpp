@@ -32,6 +32,9 @@ void UBTService_DetectDynamite::TickNode(UBehaviorTreeComponent &OwnerComp, uint
         if(Dynamite){
             UE_LOG(LogTemp, Warning, TEXT("we see a dynamite"));
             OwnerComp.GetBlackboardComponent()->SetValueAsObject(GetSelectedBlackboardKey(), Dynamite);
+
+            // temp force the AI to pick new target location
+            OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("IsAIStuck"), true);
         }
     }
 }
