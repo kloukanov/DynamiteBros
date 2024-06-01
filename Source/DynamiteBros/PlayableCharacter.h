@@ -67,10 +67,11 @@ protected:
 	// movement input
 	void Move(const struct FInputActionValue& Value);
 
+public:	
+
 	// drop dynamite input
 	void Drop();
 
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
