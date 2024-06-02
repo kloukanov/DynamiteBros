@@ -28,7 +28,7 @@ void UBTService_DefaultTargetLocation::TickNode(UBehaviorTreeComponent &OwnerCom
         float RandomY = FMath::RandRange(MIN_Y, MAX_Y);
 
         FVector TargetLocation(RandomX, RandomY, 50.f);
-        DrawDebugSphere(GetWorld(), TargetLocation, 50.f, 8, FColor::Green, true, 5.f);
+        // DrawDebugSphere(GetWorld(), TargetLocation, 50.f, 8, FColor::Green, true, 5.f);
 
         OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("IsAIStuck"), false);
 

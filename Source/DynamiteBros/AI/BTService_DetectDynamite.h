@@ -20,5 +20,8 @@ public:
 
 protected:
 	virtual void TickNode(UBehaviorTreeComponent &OwnerComp, uint8 *NodeMemory, float DeltaSeconds) override;
-	
+
+private:
+	void SetRunAwayDirection(UBehaviorTreeComponent &OwnerComp, FVector Location, class ADynamite* Dynamite);
+
 };

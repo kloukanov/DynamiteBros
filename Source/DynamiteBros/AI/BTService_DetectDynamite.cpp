@@ -15,16 +15,15 @@ void UBTService_DetectDynamite::TickNode(UBehaviorTreeComponent &OwnerComp, uint
     }
 
     ADynamite* Dynamite = Cast<ADynamite>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(GetSelectedBlackboardKey()));
+    FVector Start = OwnerComp.GetAIOwner()->GetPawn()->GetActorLocation();
 
     // early return if dynamite is already set
     if(Dynamite) { 
+        SetRunAwayDirection(OwnerComp, Start, Dynamite);
         return;
     }
 
     FCollisionShape VisibilitySphere = FCollisionShape::MakeSphere(500.f);
-    FVector Start = OwnerComp.GetAIOwner()->GetPawn()->GetActorLocation();
-
-    // DrawDebugSphere(GetWorld(), Start, 500.f, 10, FColor::Blue);
 
     FHitResult OutHitResult;
     if(GetWorld()->SweepSingleByChannel(OutHitResult, Start, Start, FQuat::Identity, ECC_GameTraceChannel2, VisibilitySphere)){
@@ -32,9 +31,19 @@ void UBTService_DetectDynamite::TickNode(UBehaviorTreeComponent &OwnerComp, uint
         if(Dynamite){
             UE_LOG(LogTemp, Warning, TEXT("we see a dynamite"));
             OwnerComp.GetBlackboardComponent()->SetValueAsObject(GetSelectedBlackboardKey(), Dynamite);
-
-            // temp force the AI to pick new target location
-            OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("IsAIStuck"), true);
+            SetRunAwayDirection(OwnerComp, Start, Dynamite);
+        }else {
+            OwnerComp.GetBlackboardComponent()->ClearValue(GetSelectedBlackboardKey());
         }
+    }else {
+        OwnerComp.GetBlackboardComponent()->ClearValue(GetSelectedBlackboardKey());
     }
+}
+
+void UBTService_DetectDynamite::SetRunAwayDirection(UBehaviorTreeComponent &OwnerComp, FVector Location, ADynamite* Dynamite) {
+    FVector LocationOfDynamte = Dynamite->GetActorLocation();
+    FVector RunAwayLocation = (Location - LocationOfDynamte) * FVector(5.f, 5.f, 0.f);
+
+    // DrawDebugSphere(GetWorld(), (Location + RunAwayLocation), 50.f, 8, FColor::Red, true, 5.f);
+    OwnerComp.GetBlackboardComponent()->SetValueAsVector(TEXT("TargetLocation"), (Location + RunAwayLocation));
 }
