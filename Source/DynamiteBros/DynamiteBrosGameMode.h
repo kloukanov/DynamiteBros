@@ -13,6 +13,12 @@ class ADynamiteBrosGameMode : public AGameModeBase
 
 public:
 	ADynamiteBrosGameMode();
+
+	virtual void PawnKilled(APawn* PawnKilled);
+
+private:
+
+	void EndGame(bool bIsPlayerWinner);
 };
 
 

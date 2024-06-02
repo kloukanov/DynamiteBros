@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Dynamite.h"
+#include "DynamiteBrosGameMode.h"
 
 // Sets default values
 APlayableCharacter::APlayableCharacter()
@@ -100,6 +101,17 @@ void APlayableCharacter::Drop() {
 		Dynamite->SetOwner(this);
 		RemoveDynamite();
 	}
+}
+
+void APlayableCharacter::DamageCharacter() {
+
+	ADynamiteBrosGameMode* GameMode = GetWorld()->GetAuthGameMode<ADynamiteBrosGameMode>();
+	if(GameMode){
+		GameMode->PawnKilled(this);
+	}
+
+	DetachFromControllerPendingDestroy();
+	Destroy();
 }
 
 int APlayableCharacter::GetDynamiteCount() const {

@@ -107,6 +107,12 @@ void ADynamite::HandleExplosionCollision(TArray<FHitResult> OutHitActors) {
 			if(HitObstacle){
 				HitObstacle->HandleDestruction();
 			} 
+
+			APlayableCharacter* PlayerCharacter = Cast<APlayableCharacter>(HitActor);
+
+			if(PlayerCharacter){
+				PlayerCharacter->DamageCharacter();
+			}
 		}
 	}
 }
