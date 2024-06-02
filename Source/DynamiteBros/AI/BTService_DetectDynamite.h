@@ -22,6 +22,10 @@ protected:
 	virtual void TickNode(UBehaviorTreeComponent &OwnerComp, uint8 *NodeMemory, float DeltaSeconds) override;
 
 private:
+
+	const float MIN_RUN_AWAY_RANGE = 2.f;
+	const float MAX_RUN_AWAY_RANGE = 7.f;
+
 	void SetRunAwayDirection(UBehaviorTreeComponent &OwnerComp, FVector Location, class ADynamite* Dynamite);
 
 };

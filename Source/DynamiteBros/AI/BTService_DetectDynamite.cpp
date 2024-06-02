@@ -23,7 +23,7 @@ void UBTService_DetectDynamite::TickNode(UBehaviorTreeComponent &OwnerComp, uint
         return;
     }
 
-    FCollisionShape VisibilitySphere = FCollisionShape::MakeSphere(500.f);
+    FCollisionShape VisibilitySphere = FCollisionShape::MakeSphere(600.f);
 
     FHitResult OutHitResult;
     if(GetWorld()->SweepSingleByChannel(OutHitResult, Start, Start, FQuat::Identity, ECC_GameTraceChannel2, VisibilitySphere)){
@@ -42,7 +42,9 @@ void UBTService_DetectDynamite::TickNode(UBehaviorTreeComponent &OwnerComp, uint
 
 void UBTService_DetectDynamite::SetRunAwayDirection(UBehaviorTreeComponent &OwnerComp, FVector Location, ADynamite* Dynamite) {
     FVector LocationOfDynamte = Dynamite->GetActorLocation();
-    FVector RunAwayLocation = (Location - LocationOfDynamte) * FVector(5.f, 5.f, 0.f);
+    float DirectionX = FMath::RandRange(MIN_RUN_AWAY_RANGE, MAX_RUN_AWAY_RANGE);
+    float DirectionY = FMath::RandRange(MIN_RUN_AWAY_RANGE, MAX_RUN_AWAY_RANGE);
+    FVector RunAwayLocation = (Location - LocationOfDynamte) * FVector(DirectionX, DirectionY, 0.f);
 
     // DrawDebugSphere(GetWorld(), (Location + RunAwayLocation), 50.f, 8, FColor::Red, true, 5.f);
     OwnerComp.GetBlackboardComponent()->SetValueAsVector(TEXT("TargetLocation"), (Location + RunAwayLocation));

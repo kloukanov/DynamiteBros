@@ -20,7 +20,7 @@ void UBTService_DetectAbility::TickNode(UBehaviorTreeComponent &OwnerComp, uint8
         return;
     }
 
-    FCollisionShape VisibilitySphere = FCollisionShape::MakeSphere(500.f);
+    FCollisionShape VisibilitySphere = FCollisionShape::MakeSphere(400.f);
     FVector Start = OwnerComp.GetAIOwner()->GetPawn()->GetActorLocation();
 
     FHitResult OutHitResult;
