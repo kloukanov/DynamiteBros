@@ -30,7 +30,13 @@ void UBTService_DetectAbility::TickNode(UBehaviorTreeComponent &OwnerComp, uint8
         if(Ability){
             UE_LOG(LogTemp, Warning, TEXT("we see an ability"));
             OwnerComp.GetBlackboardComponent()->SetValueAsObject(GetSelectedBlackboardKey(), Ability);
-            OwnerComp.GetBlackboardComponent()->SetValueAsVector(TEXT("AbilityLocation"), Ability->GetActorLocation());
+            FVector AbilityLocation(Ability->GetActorLocation().X, Ability->GetActorLocation().Y, 50.f);
+            OwnerComp.GetBlackboardComponent()->SetValueAsVector(TEXT("AbilityLocation"), AbilityLocation);
+        }else {
+            OwnerComp.GetBlackboardComponent()->ClearValue(GetSelectedBlackboardKey());
         }
+    }
+    else {
+        OwnerComp.GetBlackboardComponent()->ClearValue(GetSelectedBlackboardKey());
     }
 }
