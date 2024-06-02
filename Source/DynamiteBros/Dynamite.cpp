@@ -78,15 +78,17 @@ void ADynamite::DoExplosion(FVector StartLocation, FVector EndLocation, FVector 
 	SpawnExplosionEffect(ExplosionDirection.Rotation());
 
 	for(int i = 0; i < 3; i++) {
-		TArray<FHitResult> TempHitActors;
+		FHitResult TempHitActors;
 
-		GetWorld()->LineTraceMultiByChannel(TempHitActors, StartLocation + TempOffset, EndLocation + TempOffset, ECollisionChannel::ECC_GameTraceChannel1);
+		GetWorld()->LineTraceSingleByChannel(TempHitActors, StartLocation + TempOffset, EndLocation + TempOffset, ECollisionChannel::ECC_GameTraceChannel1);
 		if(ShowTraceLines){
 			DrawDebugLine(GetWorld(), StartLocation + TempOffset, EndLocation + TempOffset, FColor::Red, true, 5);
 		}
 
-		AllActors.Append(TempHitActors);
-		TempHitActors.Empty();
+		if(TempHitActors.GetActor()){
+			AllActors.Add(TempHitActors);
+		}
+
 		TempOffset -= Offset;
 	}
 
