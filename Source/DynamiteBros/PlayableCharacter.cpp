@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Dynamite.h"
 #include "DynamiteBrosGameMode.h"
+#include "Components/PointLightComponent.h"
 
 // Sets default values
 APlayableCharacter::APlayableCharacter()
@@ -28,7 +29,8 @@ APlayableCharacter::APlayableCharacter()
 	DynamiteSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point"));
 	DynamiteSpawnPoint->SetupAttachment(RootComponent);
 
-
+	PointLightComponent = CreateDefaultSubobject<UPointLightComponent>(TEXT("PointLightComponent"));
+	PointLightComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +44,10 @@ void APlayableCharacter::BeginPlay()
 			SubSystem->AddMappingContext(InputMappingContext, 0);
 		}
 	}
-
+	
+	if(PointLightComponent){
+		PointLightComponent->SetLightColor(ExplosionColor);
+	}
 }
 
 // Called every frame

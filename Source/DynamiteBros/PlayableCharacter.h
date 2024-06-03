@@ -40,6 +40,9 @@ class DYNAMITEBROS_API APlayableCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, Category = Explosion, meta = (AllowPrivateAccess = "true"))
 	int DynamiteCount = 1;
 
+	UPROPERTY(EditAnywhere, Category = Light, meta = (AllowPrivateAccess = "true"))
+	class UPointLightComponent* PointLightComponent;
+
 public:
 	// Sets default values for this character's properties
 	APlayableCharacter();
