@@ -31,4 +31,6 @@ private:
 	TSubclassOf<class UUserWidget> EndGameScreen;
 
 	APlayableCharacter* TheWinner;
+
+	void PauseGame();
 };

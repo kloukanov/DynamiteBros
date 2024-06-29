@@ -60,6 +60,7 @@ void ADynamiteBrosGameMode::EndGame(AActor* Winner) {
 
 		if(GameOverScreen){
 			GameOverScreen->AddToViewport();
+			PauseGame();
 		}
 
 		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
@@ -72,4 +73,8 @@ void ADynamiteBrosGameMode::EndGame(AActor* Winner) {
 
 APlayableCharacter* ADynamiteBrosGameMode::GetTheWinner() const {
 	return TheWinner;
+}
+
+void ADynamiteBrosGameMode::PauseGame() {
+	UGameplayStatics::SetGamePaused(GetWorld(), true);
 }
