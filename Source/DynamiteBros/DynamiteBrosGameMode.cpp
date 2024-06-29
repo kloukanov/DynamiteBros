@@ -1,10 +1,10 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "DynamiteBrosGameMode.h"
-#include "DynamiteBrosCharacter.h"
-#include "UObject/ConstructorHelpers.h"
-#include "AI/EnemyAIController.h"
-#include "EngineUtils.h"
+// #include "UObject/ConstructorHelpers.h"
+#include "Kismet/GameplayStatics.h"
+#include "PlayableCharacter.h"
+#include "Blueprint/UserWidget.h"
 
 ADynamiteBrosGameMode::ADynamiteBrosGameMode()
 {
@@ -16,13 +16,47 @@ ADynamiteBrosGameMode::ADynamiteBrosGameMode()
 	// }
 }
 
+void ADynamiteBrosGameMode::BeginPlay()
+{
+    Super::BeginPlay();
+
+	// get all the players in the game
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), AllPlayers);
+	
+	for(int i = 0; i < AllPlayers.Num(); i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("We have actor with name: %s"), *AllPlayers[i]->GetActorNameOrLabel());
+	}
+}
+
+
 // temp implementing this function here instead of creating separate gamemode
 void ADynamiteBrosGameMode::PawnKilled(APawn* PawnKilled) {
 
 	UE_LOG(LogTemp, Warning, TEXT("THIS PAWN DIED: %s"), *PawnKilled->GetActorNameOrLabel());
 
+	AllPlayers.Remove(PawnKilled);
+
+	if(AllPlayers.Num() == 1) {
+		EndGame(AllPlayers[0]);
+	}
 }
 
-void ADynamiteBrosGameMode::EndGame(bool bIsPlayerWinner) {
+void ADynamiteBrosGameMode::EndGame(AActor* Winner) {
 
+	TheWinner = Cast<APlayableCharacter>(Winner);
+
+	if(TheWinner){
+		UE_LOG(LogTemp, Warning, TEXT("THE WINNER IS: %s"), *TheWinner->GetPlayerName());
+
+		UUserWidget* GameOverScreen = CreateWidget(GetWorld(), EndGameScreen);
+
+		if(GameOverScreen){
+			GameOverScreen->AddToViewport();
+		}
+	}
+}
+
+APlayableCharacter* ADynamiteBrosGameMode::GetTheWinner() const {
+	return TheWinner;
 }

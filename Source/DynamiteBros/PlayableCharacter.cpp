@@ -150,3 +150,7 @@ int APlayableCharacter::GetExplosionPower() const {
 FLinearColor APlayableCharacter::GetExplosionColor() const {
 	return ExplosionColor;
 }
+
+FString APlayableCharacter::GetPlayerName() const{
+	return PlayerName;
+}

@@ -16,10 +16,19 @@ public:
 
 	virtual void PawnKilled(APawn* PawnKilled);
 
+	UFUNCTION(BlueprintPure)
+	APlayableCharacter* GetTheWinner() const;
+
 private:
 
-	void EndGame(bool bIsPlayerWinner);
+	virtual void BeginPlay() override;
+
+	TArray<AActor*> AllPlayers;
+
+	void EndGame(AActor* Winner);
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> EndGameScreen;
+
+	APlayableCharacter* TheWinner;
 };
-
-
-

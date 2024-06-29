@@ -40,6 +40,9 @@ class DYNAMITEBROS_API APlayableCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, Category = Explosion, meta = (AllowPrivateAccess = "true"))
 	int DynamiteCount = 1;
 
+	UPROPERTY(EditAnywhere, Category = Player, meta = (AllowPrivateAccess = "true"))
+	FString PlayerName;
+
 	UPROPERTY(EditAnywhere, Category = Light, meta = (AllowPrivateAccess = "true"))
 	class UPointLightComponent* PointLightComponent;
 
@@ -55,9 +58,13 @@ public:
 
 	void SetExplosionPower(int ExplosionPower);
 
+	UFUNCTION(BlueprintPure)
 	FLinearColor GetExplosionColor() const;
 
 	int GetDynamiteCount() const;
+
+	UFUNCTION(BlueprintPure)
+	FString GetPlayerName() const;
 
 	void AddDynamite();
 
