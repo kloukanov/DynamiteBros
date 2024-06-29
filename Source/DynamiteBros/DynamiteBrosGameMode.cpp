@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "PlayableCharacter.h"
 #include "Blueprint/UserWidget.h"
+#include "AI/EnemyAIController.h"
 
 ADynamiteBrosGameMode::ADynamiteBrosGameMode()
 {
@@ -26,6 +27,12 @@ void ADynamiteBrosGameMode::BeginPlay()
 	for(int i = 0; i < AllPlayers.Num(); i++)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("We have actor with name: %s"), *AllPlayers[i]->GetActorNameOrLabel());
+	}
+
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+
+	if(PlayerController){
+		PlayerController->SetInputMode(FInputModeGameOnly());
 	}
 }
 
@@ -53,6 +60,12 @@ void ADynamiteBrosGameMode::EndGame(AActor* Winner) {
 
 		if(GameOverScreen){
 			GameOverScreen->AddToViewport();
+		}
+
+		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+
+		if(PlayerController){
+			PlayerController->SetInputMode(FInputModeUIOnly());
 		}
 	}
 }
