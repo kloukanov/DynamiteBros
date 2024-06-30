@@ -24,8 +24,8 @@ private:
 
 	const float MIN_X = -737.f;
 	const float MAX_X = 1201.f;
-	const float MIN_Y = -985.f;
-	const float MAX_Y = 968.f;
+	const float MIN_Y = -1294.f;
+	const float MAX_Y = 1268.f;
 
 	bool IsTargetLocationReached(FVector OwnerLocation, FVector TargetLocation, float MarginOfError = 3.f) const;
 };
