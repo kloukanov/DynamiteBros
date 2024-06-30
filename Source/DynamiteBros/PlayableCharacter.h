@@ -61,10 +61,14 @@ public:
 	UFUNCTION(BlueprintPure)
 	FLinearColor GetExplosionColor() const;
 
+	void SetExplosionColor(FLinearColor Color);
+
 	int GetDynamiteCount() const;
 
 	UFUNCTION(BlueprintPure)
 	FString GetPlayerName() const;
+
+	void SetPlayerName(FString PlayerName);
 
 	void AddDynamite();
 
@@ -89,5 +93,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void DamageCharacter();
+
+	void SetUpCharacter(FString Name, FLinearColor Color);
 
 };

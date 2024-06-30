@@ -21,6 +21,9 @@ void ADynamiteBrosGameMode::BeginPlay()
 {
     Super::BeginPlay();
 
+	APlayableCharacter* Enemy = GetWorld()->SpawnActor<APlayableCharacter>(EnemyPlayerClass, FVector(-372, 16, 88), FRotator::ZeroRotator);
+	Enemy->SetUpCharacter("The new guy", FLinearColor::Blue);
+
 	// get all the players in the game
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), AllPlayers);
 	

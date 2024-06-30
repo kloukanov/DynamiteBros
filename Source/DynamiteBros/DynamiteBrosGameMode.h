@@ -33,4 +33,7 @@ private:
 	APlayableCharacter* TheWinner;
 
 	void PauseGame();
+
+	UPROPERTY(EditDefaultsOnly, Category = EnemyPlayer)
+	TSubclassOf<class APlayableCharacter> EnemyPlayerClass;
 };

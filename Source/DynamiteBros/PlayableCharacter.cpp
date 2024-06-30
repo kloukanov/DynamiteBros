@@ -119,6 +119,16 @@ void APlayableCharacter::DamageCharacter() {
 	Destroy();
 }
 
+void APlayableCharacter::SetUpCharacter(FString Name, FLinearColor Color) {
+	
+	SetPlayerName(Name);
+	SetExplosionColor(Color);
+
+	if(PointLightComponent){
+		PointLightComponent->SetLightColor(ExplosionColor);
+	}
+}
+
 int APlayableCharacter::GetDynamiteCount() const {
 	return DynamiteCount;
 }
@@ -151,6 +161,14 @@ FLinearColor APlayableCharacter::GetExplosionColor() const {
 	return ExplosionColor;
 }
 
+void APlayableCharacter::SetExplosionColor(FLinearColor Color) {
+	ExplosionColor = Color;
+}
+
 FString APlayableCharacter::GetPlayerName() const{
 	return PlayerName;
+}
+
+void APlayableCharacter::SetPlayerName(FString Name){
+	PlayerName = Name;
 }
