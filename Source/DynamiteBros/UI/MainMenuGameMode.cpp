@@ -5,7 +5,7 @@ void AMainMenuGameMode::BeginPlay() {
 
     Super::BeginPlay();
 
-    UUserWidget* MainMenu = CreateWidget(GetWorld(), MainMenuScreen);
+    MainMenu = CreateWidget(GetWorld(), MainMenuScreen);
 
     if(MainMenu){
         MainMenu->AddToViewport();
@@ -17,4 +17,22 @@ void AMainMenuGameMode::BeginPlay() {
         PlayerController->SetInputMode(FInputModeUIOnly());
         PlayerController->SetShowMouseCursor(true);
     }
+}
+
+void AMainMenuGameMode::GoToCharacterSelectScreen() {
+
+    CharacterSelect = CreateWidget(GetWorld(), CharacterSelectScreen);
+
+    if(CharacterSelect){
+        MainMenu->RemoveFromParent();
+        CharacterSelect->AddToViewport();
+    }
+}
+
+USkeletalMesh* AMainMenuGameMode::GetCharacterMeshAt(int Index) const {
+    return CharacterMeshes[Index];
+}
+
+int AMainMenuGameMode::GetCharacterArraySize() const {
+    return CharacterMeshes.Num();
 }

@@ -129,6 +129,12 @@ void APlayableCharacter::SetUpCharacter(FString Name, FLinearColor Color) {
 	}
 }
 
+void APlayableCharacter::ChangeCharacterMesh(USkeletalMesh* CharMesh) {
+
+	USkeletalMeshComponent* CurrentMesh = GetMesh();
+	CurrentMesh->SetSkeletalMesh(CharMesh);
+}
+
 int APlayableCharacter::GetDynamiteCount() const {
 	return DynamiteCount;
 }

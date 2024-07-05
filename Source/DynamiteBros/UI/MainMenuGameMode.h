@@ -20,5 +20,24 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget> MainMenuScreen;
+
+	class UUserWidget* MainMenu;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> CharacterSelectScreen;
+
+	class UUserWidget* CharacterSelect;
+
+	UPROPERTY(EditAnywhere, Category = Meshes, meta = (AllowPrivateAccess = "true"))
+	TArray<USkeletalMesh*> CharacterMeshes;
+
+public:
+
+	UFUNCTION(Blueprintcallable)
+	void GoToCharacterSelectScreen();
+
+	USkeletalMesh* GetCharacterMeshAt(int Index) const;
+
+	int GetCharacterArraySize() const;
 	
 };

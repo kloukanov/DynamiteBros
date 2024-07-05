@@ -96,4 +96,6 @@ public:
 
 	void SetUpCharacter(FString Name, FLinearColor Color);
 
+	void ChangeCharacterMesh(USkeletalMesh* CharMesh);
+
 };
