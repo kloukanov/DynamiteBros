@@ -38,3 +38,15 @@ void UCharacterSelectUserWidget::ChangeCharacterMesh(int MeshIndex) {
         }
     }
 }
+
+void UCharacterSelectUserWidget::ChangeCharacterColor(FLinearColor Color) {
+
+    APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+
+    if(PlayerController){
+        APlayableCharacter* PlayableCharacter = Cast<APlayableCharacter>(PlayerController->GetPawn());
+        if(PlayableCharacter) {
+            PlayableCharacter->SetUpCharacter("Player", Color);
+        }
+    }
+}
