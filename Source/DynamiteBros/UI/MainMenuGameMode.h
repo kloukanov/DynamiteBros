@@ -31,6 +31,12 @@ private:
 	UPROPERTY(EditAnywhere, Category = Meshes, meta = (AllowPrivateAccess = "true"))
 	TArray<USkeletalMesh*> CharacterMeshes;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Scenes, meta = (AllowPrivateAccess = "true"))
+	TSoftObjectPtr<class ALevelSequenceActor> MainMenuLevelSequenceActor;
+
+	void PlayMainMenuLevelCutScene();
+
 public:
 
 	UFUNCTION(Blueprintcallable)
