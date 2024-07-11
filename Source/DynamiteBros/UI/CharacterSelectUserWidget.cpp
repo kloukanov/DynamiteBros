@@ -11,18 +11,27 @@ void UCharacterSelectUserWidget::NativeConstruct() {
 }
 
 void UCharacterSelectUserWidget::GoNext() {
-    ChangeCharacterMesh((++CurrentMeshIndex) % ArraySize);
+
+    CurrentMeshIndex++;
+
+    if(CurrentMeshIndex > ArraySize - 1) {
+        CurrentMeshIndex = 0;
+    }
+    ChangeCharacterMesh(CurrentMeshIndex);
 }
 
 void UCharacterSelectUserWidget::GoPrev() {
-    if(CurrentMeshIndex == 0){
-        CurrentMeshIndex = ArraySize;
+
+    CurrentMeshIndex--;
+
+    if(CurrentMeshIndex < 0){
+        CurrentMeshIndex = ArraySize - 1;
     }
-    ChangeCharacterMesh((--CurrentMeshIndex) % ArraySize);
+    ChangeCharacterMesh(CurrentMeshIndex);
 }
 
 void UCharacterSelectUserWidget::GoBack() {
-    // TODO: implement
+    GameMode->GoToMainMenu();
 }
 
 void UCharacterSelectUserWidget::ChangeCharacterMesh(int MeshIndex) {
