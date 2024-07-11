@@ -25,9 +25,11 @@ void AMainMenuGameMode::BeginPlay() {
 
 void AMainMenuGameMode::GoToCharacterSelectScreen() {
 
-    PlayMainMenuLevelCutScene();
+    PlayCutScene(MainMenuLevelSequenceActor);
 
-    CharacterSelect = CreateWidget(GetWorld(), CharacterSelectScreen);
+    if(!CharacterSelect){
+        CharacterSelect = CreateWidget(GetWorld(), CharacterSelectScreen);
+    }
 
     if(CharacterSelect){
         MainMenu->RemoveFromParent();
@@ -35,20 +37,41 @@ void AMainMenuGameMode::GoToCharacterSelectScreen() {
     }
 }
 
-void AMainMenuGameMode::PlayMainMenuLevelCutScene() {
-    if(MainMenuLevelSequenceActor.IsValid()){
+void AMainMenuGameMode::GoToMainMenu() {
+    
+    PlayCutScene(BackToMainMenuLevelSequenceActor);
 
-        ALevelSequenceActor* MainMenuLevelSequenceActorReference = MainMenuLevelSequenceActor.Get();
+    if(CharacterSelect){
+        CharacterSelect->RemoveFromParent();
+        MainMenu->AddToViewport();
+    }
+}
 
-        FMovieSceneSequencePlaybackSettings PlaybackSettings;
-        ULevelSequence* MainMenuSequence = MainMenuLevelSequenceActorReference->GetSequence();
-        ULevelSequencePlayer* LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
-            GetWorld(),
-            MainMenuSequence,
-            PlaybackSettings,
-            MainMenuLevelSequenceActorReference
-        );
-        LevelSequencePlayer->Play();
+void AMainMenuGameMode::PlayCutScene(TSoftObjectPtr<ALevelSequenceActor> SceneActor) {
+
+    if(SceneActor.IsValid()){
+
+        ALevelSequenceActor* SceneActorReference = SceneActor.Get();
+
+        if(!LevelSequencePlayer){
+            FMovieSceneSequencePlaybackSettings PlaybackSettings;
+            ULevelSequence* LevelSequence = SceneActorReference->GetSequence();
+            LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
+                GetWorld(),
+                LevelSequence,
+                PlaybackSettings,
+                SceneActorReference
+            );
+        }
+        else {
+            // LevelSequencePlayer is already created
+            ULevelSequence* LevelSequence = SceneActorReference->GetSequence();
+            LevelSequencePlayer->Initialize(LevelSequence, GetWorld()->GetCurrentLevel(), FLevelSequenceCameraSettings());
+        }
+
+        if (LevelSequencePlayer) {
+            LevelSequencePlayer->Play();
+        };
     }
 }
 

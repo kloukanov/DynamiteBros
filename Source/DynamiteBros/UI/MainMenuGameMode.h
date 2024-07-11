@@ -35,12 +35,20 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Scenes, meta = (AllowPrivateAccess = "true"))
 	TSoftObjectPtr<class ALevelSequenceActor> MainMenuLevelSequenceActor;
 
-	void PlayMainMenuLevelCutScene();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Scenes, meta = (AllowPrivateAccess = "true"))
+	TSoftObjectPtr<class ALevelSequenceActor> BackToMainMenuLevelSequenceActor;
+
+	class ULevelSequencePlayer* LevelSequencePlayer;
+
+	void PlayCutScene(TSoftObjectPtr<class ALevelSequenceActor> SceneActor);
 
 public:
 
 	UFUNCTION(Blueprintcallable)
 	void GoToCharacterSelectScreen();
+
+	UFUNCTION(Blueprintcallable)
+	void GoToMainMenu();
 
 	USkeletalMesh* GetCharacterMeshAt(int Index) const;
 
