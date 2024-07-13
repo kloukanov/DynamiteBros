@@ -36,6 +36,9 @@ public:
 	void GoBack();
 
 	UFUNCTION(Blueprintcallable)
+	void GoPlayGame();
+
+	UFUNCTION(Blueprintcallable)
 	void ChangeCharacterColor(FLinearColor Color);
 
 	virtual void NativeConstruct() override;

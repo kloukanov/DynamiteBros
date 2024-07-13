@@ -4,6 +4,10 @@
 #include "LevelSequence.h"
 #include "LevelSequencePlayer.h"
 #include "MovieSceneSequencePlayer.h"
+#include "Engine/StreamableManager.h"
+#include "Engine/AssetManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 void AMainMenuGameMode::BeginPlay() {
 
@@ -27,12 +31,11 @@ void AMainMenuGameMode::GoToCharacterSelectScreen() {
 
     PlayCutScene(MainMenuLevelSequenceActor);
 
-    if(!CharacterSelect){
-        CharacterSelect = CreateWidget(GetWorld(), CharacterSelectScreen);
-    }
+    CharacterSelect = CreateWidget(GetWorld(), CharacterSelectScreen);
 
     if(CharacterSelect){
         MainMenu->RemoveFromParent();
+        MainMenu = nullptr;
         CharacterSelect->AddToViewport();
     }
 }
@@ -43,8 +46,18 @@ void AMainMenuGameMode::GoToMainMenu() {
 
     if(CharacterSelect){
         CharacterSelect->RemoveFromParent();
-        MainMenu->AddToViewport();
+        CharacterSelect = nullptr;
+
+        MainMenu = CreateWidget(GetWorld(), MainMenuScreen);
+
+        if(MainMenu){
+            MainMenu->AddToViewport();
+        }
     }
+}
+
+void AMainMenuGameMode::GoToPlayGame() {
+    LoadLevelAsync(GameMapLevel);
 }
 
 void AMainMenuGameMode::PlayCutScene(TSoftObjectPtr<ALevelSequenceActor> SceneActor) {
@@ -73,6 +86,42 @@ void AMainMenuGameMode::PlayCutScene(TSoftObjectPtr<ALevelSequenceActor> SceneAc
             LevelSequencePlayer->Play();
         };
     }
+}
+
+void AMainMenuGameMode::LoadLevelAsync(TSoftObjectPtr<UWorld> Level) {
+
+    FStreamableManager& Streamable = UAssetManager::GetStreamableManager();
+
+    if(CharacterSelect) {
+        CharacterSelect->RemoveFromParent();
+        CharacterSelect = nullptr;
+    }
+
+    LoadingLevel = CreateWidget(GetWorld(), LoadingLevelScreen);
+    LoadingLevel->AddToViewport();
+
+    float DelayDuration = 1.0f;
+
+    Streamable.RequestAsyncLoad(Level.ToSoftObjectPath(), FStreamableDelegate::CreateUObject(this, &AMainMenuGameMode::SetSmallDelayForLoading, DelayDuration, Level.GetAssetName()));
+}
+
+// very small delay so that if the scene loads really fast the player doesn't just get a screen flash
+void AMainMenuGameMode::SetSmallDelayForLoading(float DelayDuration, FString LevelName) {
+
+    FTimerHandle TimerHandle;
+    GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this, LevelName](){
+        OnLevelLoaded(LevelName);
+    }, DelayDuration, false);
+}
+
+void AMainMenuGameMode::OnLevelLoaded(FString LevelName) {
+
+    if(LoadingLevel) {
+        LoadingLevel->RemoveFromParent();
+        LoadingLevel = nullptr;
+    }
+    
+    UGameplayStatics::OpenLevel(GetWorld(), FName(LevelName));
 }
 
 USkeletalMesh* AMainMenuGameMode::GetCharacterMeshAt(int Index) const {
