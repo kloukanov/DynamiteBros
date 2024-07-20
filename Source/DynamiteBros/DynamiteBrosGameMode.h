@@ -19,6 +19,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	APlayableCharacter* GetTheWinner() const;
 
+	UFUNCTION(Blueprintcallable)
+	void GoToMainMenu();
+
 private:
 
 	FVector SpawnPoints[5] = { 
@@ -28,6 +31,8 @@ private:
 		FVector(790.f, 16.f, 88.f), 
 		FVector(-372.f, 16.f, 88.f), 	
 	};
+
+	class UUserWidget* GameOverScreen;
 
 	virtual void BeginPlay() override;
 
@@ -40,7 +45,7 @@ private:
 
 	APlayableCharacter* TheWinner;
 
-	void PauseGame();
+	void PauseGame(bool bShouldPause);
 
 	UPROPERTY(EditDefaultsOnly, Category = EnemyPlayer)
 	TSubclassOf<class APlayableCharacter> EnemyPlayerClass;

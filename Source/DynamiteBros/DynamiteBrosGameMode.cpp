@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "AI/EnemyAIController.h"
 #include "DBGameInstance.h"
+#include "LevelManager.h"
 
 ADynamiteBrosGameMode::ADynamiteBrosGameMode()
 {
@@ -73,11 +74,11 @@ void ADynamiteBrosGameMode::EndGame(AActor* Winner) {
 	if(TheWinner){
 		UE_LOG(LogTemp, Warning, TEXT("THE WINNER IS: %s"), *TheWinner->GetPlayerName());
 
-		UUserWidget* GameOverScreen = CreateWidget(GetWorld(), EndGameScreen);
+		GameOverScreen = CreateWidget(GetWorld(), EndGameScreen);
 
 		if(GameOverScreen){
 			GameOverScreen->AddToViewport();
-			PauseGame();
+			PauseGame(true);
 		}
 
 		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
@@ -92,6 +93,19 @@ APlayableCharacter* ADynamiteBrosGameMode::GetTheWinner() const {
 	return TheWinner;
 }
 
-void ADynamiteBrosGameMode::PauseGame() {
-	UGameplayStatics::SetGamePaused(GetWorld(), true);
+void ADynamiteBrosGameMode::PauseGame(bool bShouldPause) {
+	UGameplayStatics::SetGamePaused(GetWorld(), bShouldPause);
+}
+
+void ADynamiteBrosGameMode::GoToMainMenu() {
+	if(GameOverScreen){
+		GameOverScreen->RemoveFromParent();
+        GameOverScreen = nullptr;
+	}
+
+	PauseGame(false);
+
+	UDBGameInstance* GameInstance = Cast<UDBGameInstance>(GetWorld()->GetGameInstance());
+
+	GameInstance->GetLevelManager()->LoadLevelAsync(GameInstance->GetMainMenuLevel());
 }
