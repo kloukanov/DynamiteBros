@@ -6,6 +6,7 @@
 #include "PlayableCharacter.h"
 #include "Blueprint/UserWidget.h"
 #include "AI/EnemyAIController.h"
+#include "DBGameInstance.h"
 
 ADynamiteBrosGameMode::ADynamiteBrosGameMode()
 {
@@ -21,8 +22,8 @@ void ADynamiteBrosGameMode::BeginPlay()
 {
     Super::BeginPlay();
 
-	APlayableCharacter* Enemy = GetWorld()->SpawnActor<APlayableCharacter>(EnemyPlayerClass, FVector(-372, 16, 88), FRotator::ZeroRotator);
-	Enemy->SetUpCharacter("The new guy", FLinearColor::Blue);
+	// APlayableCharacter* Enemy = GetWorld()->SpawnActor<APlayableCharacter>(EnemyPlayerClass, FVector(-372, 16, 88), FRotator::ZeroRotator);
+	// Enemy->SetUpCharacter("The new guy", FLinearColor::Blue);
 
 	// get all the players in the game
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), AllPlayers);
@@ -32,11 +33,21 @@ void ADynamiteBrosGameMode::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("We have actor with name: %s"), *AllPlayers[i]->GetActorNameOrLabel());
 	}
 
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	UDBGameInstance* GameInstance = Cast<UDBGameInstance>(GetWorld()->GetGameInstance());
 
-	if(PlayerController){
-		PlayerController->SetInputMode(FInputModeGameOnly());
-	}
+    if(GameInstance){
+		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+
+		if(PlayerController){
+			PlayerController->SetInputMode(FInputModeGameOnly());
+
+			APlayableCharacter* PlayableCharacter = Cast<APlayableCharacter>(PlayerController->GetPawn());
+			if(PlayableCharacter) {
+				PlayableCharacter->ChangeCharacterMesh(GameInstance->GetSelectedCharacterMesh());
+				PlayableCharacter->SetUpCharacter("Player", GameInstance->GetExplosionColor());
+			}
+		}
+    }
 }
 
 

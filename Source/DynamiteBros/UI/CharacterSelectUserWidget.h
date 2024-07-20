@@ -22,6 +22,8 @@ private:
 
 	int ArraySize = 0;
 
+	FLinearColor SelectedColor;
+
 	void ChangeCharacterMesh(int MeshIndex);
 
 public:

@@ -1,7 +1,7 @@
 #include "CharacterSelectUserWidget.h"
 #include "../PlayableCharacter.h"
 #include "MainMenuGameMode.h"
-#include "../DBGameState.h"
+#include "../DBGameInstance.h"
 
 
 void UCharacterSelectUserWidget::NativeConstruct() {
@@ -44,6 +44,7 @@ void UCharacterSelectUserWidget::ChangeCharacterMesh(int MeshIndex) {
     if(PlayerController){
         APlayableCharacter* PlayableCharacter = Cast<APlayableCharacter>(PlayerController->GetPawn());
         if(PlayableCharacter) {
+            SelectedColor = PlayableCharacter->GetExplosionColor();
             PlayableCharacter->ChangeCharacterMesh(CharMesh);
         }
     }
@@ -56,6 +57,7 @@ void UCharacterSelectUserWidget::ChangeCharacterColor(FLinearColor Color) {
     if(PlayerController){
         APlayableCharacter* PlayableCharacter = Cast<APlayableCharacter>(PlayerController->GetPawn());
         if(PlayableCharacter) {
+            SelectedColor = Color;
             PlayableCharacter->SetUpCharacter("Player", Color);
         }
     }
@@ -63,13 +65,12 @@ void UCharacterSelectUserWidget::ChangeCharacterColor(FLinearColor Color) {
 
 void UCharacterSelectUserWidget::GoPlayGame() {
 
-    ADBGameState* GameState = GetWorld()->GetGameState<ADBGameState>();
+    UDBGameInstance* GameInstance = Cast<UDBGameInstance>(GetWorld()->GetGameInstance());
 
-    if(GameState){
-        GameState->SetSelectedCharacterMesh(GameMode->GetCharacterMeshAt(CurrentMeshIndex));
+    if(GameInstance){
+        GameInstance->SetSelectedCharacterMesh(GameMode->GetCharacterMeshAt(CurrentMeshIndex));
+        GameInstance->SetExplosionColor(SelectedColor);
     }
-
-    UE_LOG(LogTemp, Warning, TEXT("the mesh is %s"), *GameState->GetSelectedCharacterMesh()->GetName());
 
     GameMode->GoToPlayGame();
 }
