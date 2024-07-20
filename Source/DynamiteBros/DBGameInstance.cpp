@@ -1,4 +1,28 @@
 #include "DBGameInstance.h"
+#include "LevelManager.h"
+
+void UDBGameInstance::Init() {
+    Super::Init();
+
+    LevelManager = NewObject<ULevelManager>(this);
+    LevelManager->Initialize(this);
+}
+
+ULevelManager* UDBGameInstance::GetLevelManager() const {
+    return LevelManager;
+}
+
+TSubclassOf<class UUserWidget> UDBGameInstance::GetLoadingLevelScreen() const {
+    return LoadingLevelScreen;
+}
+
+TSoftObjectPtr<UWorld> UDBGameInstance::GetMainMenuLevel() const{
+    return MainMenuLevel;
+}
+
+TSoftObjectPtr<UWorld> UDBGameInstance::GetGameMapLevel() const{
+    return GameMapLevel;
+}
 
 USkeletalMesh* UDBGameInstance::GetSelectedCharacterMesh() const {
     return SelectedCharacterMesh;
