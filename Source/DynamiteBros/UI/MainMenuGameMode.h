@@ -64,9 +64,5 @@ public:
 	void GoToMainMenu();
 
 	void GoToPlayGame();
-
-	USkeletalMesh* GetCharacterMeshAt(int Index) const;
-
-	int GetCharacterArraySize() const;
 	
 };

@@ -18,6 +18,8 @@ private:
 
 	class AMainMenuGameMode* GameMode;
 
+	class UDBGameInstance* GameInstance;
+
 	int CurrentMeshIndex = 0;
 
 	int ArraySize = 0;

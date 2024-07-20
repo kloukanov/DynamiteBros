@@ -21,6 +21,14 @@ public:
 
 private:
 
+	FVector SpawnPoints[5] = { 
+		FVector(-695.f, -973.f, 88.f), 
+		FVector(-695.f, 970.f, 88.f), 
+		FVector(1170.f, 970.f, 88.f), 
+		FVector(790.f, 16.f, 88.f), 
+		FVector(-372.f, 16.f, 88.f), 	
+	};
+
 	virtual void BeginPlay() override;
 
 	TArray<AActor*> AllPlayers;

@@ -6,8 +6,9 @@
 
 void UCharacterSelectUserWidget::NativeConstruct() {
     Super::NativeConstruct();
+    GameInstance = Cast<UDBGameInstance>(GetWorld()->GetGameInstance());
     GameMode = GetWorld()->GetAuthGameMode<AMainMenuGameMode>();
-    ArraySize = GameMode->GetCharacterArraySize();
+    ArraySize = GameInstance->GetCharacterArraySize();
     ChangeCharacterMesh(CurrentMeshIndex);
 }
 
@@ -37,7 +38,7 @@ void UCharacterSelectUserWidget::GoBack() {
 
 void UCharacterSelectUserWidget::ChangeCharacterMesh(int MeshIndex) {
 	
-    USkeletalMesh* CharMesh = GameMode->GetCharacterMeshAt(MeshIndex);
+    USkeletalMesh* CharMesh = GameInstance->GetCharacterMeshAt(MeshIndex);
 
     APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 
@@ -65,10 +66,8 @@ void UCharacterSelectUserWidget::ChangeCharacterColor(FLinearColor Color) {
 
 void UCharacterSelectUserWidget::GoPlayGame() {
 
-    UDBGameInstance* GameInstance = Cast<UDBGameInstance>(GetWorld()->GetGameInstance());
-
     if(GameInstance){
-        GameInstance->SetSelectedCharacterMesh(GameMode->GetCharacterMeshAt(CurrentMeshIndex));
+        GameInstance->SetSelectedCharacterMesh(GameInstance->GetCharacterMeshAt(CurrentMeshIndex));
         GameInstance->SetExplosionColor(SelectedColor);
     }
 

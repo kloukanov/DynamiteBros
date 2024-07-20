@@ -22,20 +22,19 @@ void ADynamiteBrosGameMode::BeginPlay()
 {
     Super::BeginPlay();
 
-	// APlayableCharacter* Enemy = GetWorld()->SpawnActor<APlayableCharacter>(EnemyPlayerClass, FVector(-372, 16, 88), FRotator::ZeroRotator);
-	// Enemy->SetUpCharacter("The new guy", FLinearColor::Blue);
-
-	// get all the players in the game
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), AllPlayers);
-	
-	for(int i = 0; i < AllPlayers.Num(); i++)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("We have actor with name: %s"), *AllPlayers[i]->GetActorNameOrLabel());
-	}
-
 	UDBGameInstance* GameInstance = Cast<UDBGameInstance>(GetWorld()->GetGameInstance());
 
     if(GameInstance){
+
+		TArray<USkeletalMesh*> TempMeshArr = GameInstance->GetSpecifiedNumberOfCharacterMeshes(5);
+		TArray<FLinearColor> TempColorArr =	GameInstance->GetAllColorsExceptSelected();
+
+		for(int i = 0; i < 5; i++){
+			APlayableCharacter* Enemy = GetWorld()->SpawnActor<APlayableCharacter>(EnemyPlayerClass, SpawnPoints[i], FRotator::ZeroRotator);
+			Enemy->ChangeCharacterMesh(TempMeshArr[i]);
+			Enemy->SetUpCharacter("Player Number "+ (i + 1), TempColorArr[i]);
+		}
+
 		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 
 		if(PlayerController){
@@ -47,6 +46,8 @@ void ADynamiteBrosGameMode::BeginPlay()
 				PlayableCharacter->SetUpCharacter("Player", GameInstance->GetExplosionColor());
 			}
 		}
+
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), AllPlayers);
     }
 }
 

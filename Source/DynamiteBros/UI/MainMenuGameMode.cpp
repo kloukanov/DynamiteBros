@@ -123,11 +123,3 @@ void AMainMenuGameMode::OnLevelLoaded(FString LevelName) {
     
     UGameplayStatics::OpenLevel(GetWorld(), FName(LevelName));
 }
-
-USkeletalMesh* AMainMenuGameMode::GetCharacterMeshAt(int Index) const {
-    return CharacterMeshes[Index];
-}
-
-int AMainMenuGameMode::GetCharacterArraySize() const {
-    return CharacterMeshes.Num();
-}
