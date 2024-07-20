@@ -32,7 +32,9 @@ void ADynamiteBrosGameMode::BeginPlay()
 		for(int i = 0; i < 5; i++){
 			APlayableCharacter* Enemy = GetWorld()->SpawnActor<APlayableCharacter>(EnemyPlayerClass, SpawnPoints[i], FRotator::ZeroRotator);
 			Enemy->ChangeCharacterMesh(TempMeshArr[i]);
-			Enemy->SetUpCharacter("Player Number "+ (i + 1), TempColorArr[i]);
+			FString PlayerName = FString("Player Number ");
+			PlayerName.AppendInt(i + 1);
+			Enemy->SetUpCharacter(PlayerName, TempColorArr[i]);
 		}
 
 		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
