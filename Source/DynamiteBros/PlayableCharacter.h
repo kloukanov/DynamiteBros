@@ -23,6 +23,9 @@ class DYNAMITEBROS_API APlayableCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* DropInputAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* PauseGameInputAction;
+
 	// dynamite spawn point
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
 	USceneComponent* DynamiteSpawnPoint;
@@ -80,6 +83,8 @@ protected:
 
 	// movement input
 	void Move(const struct FInputActionValue& Value);
+
+	void PauseGame();
 
 public:	
 

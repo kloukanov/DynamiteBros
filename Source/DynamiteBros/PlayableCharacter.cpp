@@ -68,6 +68,8 @@ void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &APlayableCharacter::Move);
 		// drop dynamite action
 		EnhancedInputComponent->BindAction(DropInputAction, ETriggerEvent::Triggered, this, &APlayableCharacter::Drop);
+
+		EnhancedInputComponent->BindAction(PauseGameInputAction, ETriggerEvent::Triggered, this, &APlayableCharacter::PauseGame);
 	}
 
 }
@@ -105,6 +107,13 @@ void APlayableCharacter::Drop() {
 		ADynamite* Dynamite = GetWorld()->SpawnActor<ADynamite>(DynamiteClass, DynamiteSpawnPointLocation, DynamiteSpawnPointRotation);
 		Dynamite->SetOwner(this);
 		RemoveDynamite();
+	}
+}
+
+void APlayableCharacter::PauseGame() {
+	ADynamiteBrosGameMode* GameMode = GetWorld()->GetAuthGameMode<ADynamiteBrosGameMode>();
+	if(GameMode){
+		GameMode->TogglePauseGame();
 	}
 }
 

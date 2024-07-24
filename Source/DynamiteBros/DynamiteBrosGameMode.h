@@ -22,6 +22,9 @@ public:
 	UFUNCTION(Blueprintcallable)
 	void GoToMainMenu();
 
+	UFUNCTION(Blueprintcallable)
+	void TogglePauseGame();
+
 private:
 
 	FVector SpawnPoints[5] = { 
@@ -34,14 +37,24 @@ private:
 
 	class UUserWidget* GameOverScreen;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> EndGameScreen;
+
+	class UUserWidget* HUD;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> HUDScreen;
+
+	class UUserWidget* PauseGameWidget;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> PauseGameScreen;
+
 	virtual void BeginPlay() override;
 
 	TArray<AActor*> AllPlayers;
 
 	void EndGame(AActor* Winner);
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UUserWidget> EndGameScreen;
 
 	APlayableCharacter* TheWinner;
 

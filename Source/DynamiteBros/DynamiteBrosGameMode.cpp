@@ -23,6 +23,12 @@ void ADynamiteBrosGameMode::BeginPlay()
 {
     Super::BeginPlay();
 
+	HUD = CreateWidget(GetWorld(), HUDScreen);
+
+    if(HUD){
+        HUD->AddToViewport();
+    }
+
 	UDBGameInstance* GameInstance = Cast<UDBGameInstance>(GetWorld()->GetGameInstance());
 
     if(GameInstance){
@@ -108,4 +114,43 @@ void ADynamiteBrosGameMode::GoToMainMenu() {
 	UDBGameInstance* GameInstance = Cast<UDBGameInstance>(GetWorld()->GetGameInstance());
 
 	GameInstance->GetLevelManager()->LoadLevelAsync(GameInstance->GetMainMenuLevel());
+}
+
+void ADynamiteBrosGameMode::TogglePauseGame() {
+
+	bool bGamePaused = UGameplayStatics::IsGamePaused(this);
+
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+
+	if(!bGamePaused){
+		PauseGameWidget = CreateWidget(GetWorld(), PauseGameScreen);
+
+		if(PauseGameWidget){
+			PauseGameWidget->AddToViewport();
+		}
+
+		if(PlayerController){
+			PlayerController->SetShowMouseCursor(true);
+			PlayerController->SetInputMode(FInputModeGameAndUI());
+		}
+
+		PauseGame(true);
+
+	}else {
+
+		PauseGame(false);
+
+		if(PauseGameWidget){
+			PauseGameWidget->RemoveFromParent();
+			PauseGameWidget = nullptr;
+		}
+
+		if(PlayerController){
+			PlayerController->SetShowMouseCursor(false);
+		}
+
+		if(PlayerController){
+			PlayerController->SetInputMode(FInputModeGameOnly());
+		}
+	}
 }
