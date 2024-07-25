@@ -25,6 +25,9 @@ public:
 	UFUNCTION(Blueprintcallable)
 	void TogglePauseGame();
 
+	UFUNCTION(Blueprintcallable)
+	TArray<AActor*> GetAllPlayers() const;
+
 private:
 
 	FVector SpawnPoints[5] = { 

@@ -8,6 +8,7 @@
 #include "AI/EnemyAIController.h"
 #include "DBGameInstance.h"
 #include "LevelManager.h"
+#include "PlayableCharacterAssets.h"
 
 ADynamiteBrosGameMode::ADynamiteBrosGameMode()
 {
@@ -25,20 +26,17 @@ void ADynamiteBrosGameMode::BeginPlay()
 
 	HUD = CreateWidget(GetWorld(), HUDScreen);
 
-    if(HUD){
-        HUD->AddToViewport();
-    }
-
 	UDBGameInstance* GameInstance = Cast<UDBGameInstance>(GetWorld()->GetGameInstance());
 
     if(GameInstance){
 
-		TArray<USkeletalMesh*> TempMeshArr = GameInstance->GetSpecifiedNumberOfCharacterMeshes(5);
+		TArray<FPlayableCharacterAssets> TempMeshArr = GameInstance->GetSpecifiedNumberOfCharacterMeshes(5);
 		TArray<FLinearColor> TempColorArr =	GameInstance->GetAllColorsExceptSelected();
 
 		for(int i = 0; i < 5; i++){
 			APlayableCharacter* Enemy = GetWorld()->SpawnActor<APlayableCharacter>(EnemyPlayerClass, SpawnPoints[i], FRotator::ZeroRotator);
-			Enemy->ChangeCharacterMesh(TempMeshArr[i]);
+			Enemy->ChangeCharacterMesh(TempMeshArr[i].CharacterMesh);
+			Enemy->SetPlayerIcon(TempMeshArr[i].Picture);
 			FString PlayerName = FString("Player Number ");
 			PlayerName.AppendInt(i + 1);
 			Enemy->SetUpCharacter(PlayerName, TempColorArr[i]);
@@ -52,11 +50,16 @@ void ADynamiteBrosGameMode::BeginPlay()
 			APlayableCharacter* PlayableCharacter = Cast<APlayableCharacter>(PlayerController->GetPawn());
 			if(PlayableCharacter) {
 				PlayableCharacter->ChangeCharacterMesh(GameInstance->GetSelectedCharacterMesh());
+				PlayableCharacter->SetPlayerIcon(GameInstance->GetSelectedCharacterIcon());
 				PlayableCharacter->SetUpCharacter("Player", GameInstance->GetExplosionColor());
 			}
 		}
 
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), AllPlayers);
+    }
+
+	if(HUD){
+        HUD->AddToViewport();
     }
 }
 
@@ -66,6 +69,7 @@ void ADynamiteBrosGameMode::PawnKilled(APawn* PawnKilled) {
 
 	UE_LOG(LogTemp, Warning, TEXT("THIS PAWN DIED: %s"), *PawnKilled->GetActorNameOrLabel());
 
+	// TODO: rethink the way actors are destroyed
 	AllPlayers.Remove(PawnKilled);
 
 	if(AllPlayers.Num() == 1) {
@@ -97,6 +101,10 @@ void ADynamiteBrosGameMode::EndGame(AActor* Winner) {
 
 APlayableCharacter* ADynamiteBrosGameMode::GetTheWinner() const {
 	return TheWinner;
+}
+
+TArray<AActor*> ADynamiteBrosGameMode::GetAllPlayers() const {
+	return AllPlayers;
 }
 
 void ADynamiteBrosGameMode::PauseGame(bool bShouldPause) {

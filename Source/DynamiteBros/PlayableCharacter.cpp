@@ -187,3 +187,11 @@ FString APlayableCharacter::GetPlayerName() const{
 void APlayableCharacter::SetPlayerName(FString Name){
 	PlayerName = Name;
 }
+
+void APlayableCharacter::SetPlayerIcon(UTexture2D* Icon) {
+	PlayerIcon = Icon;
+}
+
+UTexture2D* APlayableCharacter::GetPlayerIcon() const {
+	return PlayerIcon;
+}

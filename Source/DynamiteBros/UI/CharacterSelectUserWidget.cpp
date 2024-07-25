@@ -69,6 +69,7 @@ void UCharacterSelectUserWidget::GoPlayGame() {
     if(GameInstance){
         GameInstance->SetSelectedCharacterMesh(GameInstance->GetCharacterMeshAt(CurrentMeshIndex));
         GameInstance->SetExplosionColor(SelectedColor);
+        GameInstance->SetSelectedCharacterIcon(GameInstance->GetCharacterIconAt(CurrentMeshIndex));
     }
 
     GameMode->GoToPlayGame();

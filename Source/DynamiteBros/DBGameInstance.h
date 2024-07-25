@@ -12,10 +12,14 @@ class DYNAMITEBROS_API UDBGameInstance : public UGameInstance
 private:
 
 	USkeletalMesh* SelectedCharacterMesh;
+	UTexture2D* SelectedCharacterIcon;
 	FLinearColor ExplosionColor;
 
-	UPROPERTY(EditAnywhere, Category = Meshes, meta = (AllowPrivateAccess = "true"))
-	TArray<USkeletalMesh*> CharacterMeshes;
+
+	UPROPERTY(EditAnywhere, Category = DataTable, meta = (AllowPrivateAccess = "true"))
+	UDataTable* CharacterAssetsDataTable;
+
+	TArray<struct FPlayableCharacterAssets> CharacterAssets;
 
 	UPROPERTY(EditAnywhere, Category = Meshes, meta = (AllowPrivateAccess = "true"))
 	TArray<FLinearColor> PossibleColors;
@@ -48,15 +52,21 @@ public:
 
 	void SetSelectedCharacterMesh(USkeletalMesh* SelectedMesh);
 
+	void SetSelectedCharacterIcon(UTexture2D* SelectedIcon);
+
+	UTexture2D* GetSelectedCharacterIcon() const;
+
 	FLinearColor GetExplosionColor() const;
 
 	void SetExplosionColor(FLinearColor);
 
 	USkeletalMesh* GetCharacterMeshAt(int Index) const;
 
+	UTexture2D* GetCharacterIconAt(int Index) const;
+
 	int GetCharacterArraySize() const;
 
-	TArray<USkeletalMesh*> GetSpecifiedNumberOfCharacterMeshes(int Number) const;
+	TArray<FPlayableCharacterAssets> GetSpecifiedNumberOfCharacterMeshes(int Number) const;
 
 	TArray<FLinearColor> GetAllColorsExceptSelected() const;
 	

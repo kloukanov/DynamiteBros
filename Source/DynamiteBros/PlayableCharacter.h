@@ -49,6 +49,8 @@ class DYNAMITEBROS_API APlayableCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, Category = Light, meta = (AllowPrivateAccess = "true"))
 	class UPointLightComponent* PointLightComponent;
 
+	UTexture2D* PlayerIcon;
+
 public:
 	// Sets default values for this character's properties
 	APlayableCharacter();
@@ -72,6 +74,11 @@ public:
 	FString GetPlayerName() const;
 
 	void SetPlayerName(FString PlayerName);
+
+	UFUNCTION(BlueprintPure)
+	UTexture2D* GetPlayerIcon() const;
+
+	void SetPlayerIcon(UTexture2D* Icon);
 
 	void AddDynamite();
 

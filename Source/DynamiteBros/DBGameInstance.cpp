@@ -1,11 +1,21 @@
 #include "DBGameInstance.h"
 #include "LevelManager.h"
+#include "PlayableCharacterAssets.h"
 
 void UDBGameInstance::Init() {
     Super::Init();
 
     LevelManager = NewObject<ULevelManager>(this);
     LevelManager->Initialize(this);
+
+    if(CharacterAssetsDataTable){
+        TArray<FPlayableCharacterAssets*> Rows;
+        CharacterAssetsDataTable->GetAllRows(TEXT("Meshes"), Rows);
+
+        for(FPlayableCharacterAssets* Row : Rows){
+            CharacterAssets.Add(*Row);
+        }
+    }
 }
 
 ULevelManager* UDBGameInstance::GetLevelManager() const {
@@ -41,21 +51,33 @@ void UDBGameInstance::SetExplosionColor(FLinearColor Color) {
 }
 
 USkeletalMesh* UDBGameInstance::GetCharacterMeshAt(int Index) const {
-    return CharacterMeshes[Index];
+    return CharacterAssets[Index].CharacterMesh;
+}
+
+UTexture2D* UDBGameInstance::GetCharacterIconAt(int Index) const {
+    return CharacterAssets[Index].Picture;
+}
+
+UTexture2D* UDBGameInstance::GetSelectedCharacterIcon() const {
+    return SelectedCharacterIcon;
+}
+
+void UDBGameInstance::SetSelectedCharacterIcon(UTexture2D* SelectedIcon){
+    SelectedCharacterIcon = SelectedIcon;
 }
 
 int UDBGameInstance::GetCharacterArraySize() const {
-    return CharacterMeshes.Num();
+    return CharacterAssets.Num();
 }
 
 // TODO: exclude selected mesh
-TArray<USkeletalMesh*> UDBGameInstance::GetSpecifiedNumberOfCharacterMeshes(int Number) const {
-    int Index = FMath::RandRange(0, CharacterMeshes.Num()-1);
+TArray<FPlayableCharacterAssets> UDBGameInstance::GetSpecifiedNumberOfCharacterMeshes(int Number) const {
+    int Index = FMath::RandRange(0, CharacterAssets.Num()-1);
 
-    TArray<USkeletalMesh*> TempArr;
+    TArray<FPlayableCharacterAssets> TempArr;
 
     for(int i = Index; i < (Index + Number); ++i){
-        TempArr.Add(CharacterMeshes[i % CharacterMeshes.Num()]);
+        TempArr.Add(CharacterAssets[i % CharacterAssets.Num()]);
     }
     return TempArr;
 }
