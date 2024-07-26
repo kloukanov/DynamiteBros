@@ -9,6 +9,7 @@
 #include "Dynamite.h"
 #include "DynamiteBrosGameMode.h"
 #include "Components/PointLightComponent.h"
+#include "./AI/EnemyAIController.h"
 
 // Sets default values
 APlayableCharacter::APlayableCharacter()
@@ -118,14 +119,18 @@ void APlayableCharacter::PauseGame() {
 }
 
 void APlayableCharacter::DamageCharacter() {
+	bIsDead = true;
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
+
+	if(AEnemyAIController* AIController = Cast<AEnemyAIController>(GetController())){
+		AIController->UnPossess();
+	}
 
 	ADynamiteBrosGameMode* GameMode = GetWorld()->GetAuthGameMode<ADynamiteBrosGameMode>();
 	if(GameMode){
 		GameMode->PawnKilled(this);
 	}
-
-	DetachFromControllerPendingDestroy();
-	Destroy();
 }
 
 void APlayableCharacter::SetUpCharacter(FString Name, FLinearColor Color) {
@@ -194,4 +199,8 @@ void APlayableCharacter::SetPlayerIcon(UTexture2D* Icon) {
 
 UTexture2D* APlayableCharacter::GetPlayerIcon() const {
 	return PlayerIcon;
+}
+
+bool APlayableCharacter::GetIsDead() const {
+	return bIsDead;
 }

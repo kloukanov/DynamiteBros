@@ -51,6 +51,8 @@ class DYNAMITEBROS_API APlayableCharacter : public ACharacter
 
 	UTexture2D* PlayerIcon;
 
+	bool bIsDead;
+
 public:
 	// Sets default values for this character's properties
 	APlayableCharacter();
@@ -83,6 +85,9 @@ public:
 	void AddDynamite();
 
 	void RemoveDynamite();
+
+	UFUNCTION(BlueprintCallable)
+	bool GetIsDead() const;
 
 protected:
 	// Called when the game starts or when spawned

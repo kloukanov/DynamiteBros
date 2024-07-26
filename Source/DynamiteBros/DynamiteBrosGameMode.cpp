@@ -69,12 +69,20 @@ void ADynamiteBrosGameMode::PawnKilled(APawn* PawnKilled) {
 
 	UE_LOG(LogTemp, Warning, TEXT("THIS PAWN DIED: %s"), *PawnKilled->GetActorNameOrLabel());
 
-	// TODO: rethink the way actors are destroyed
+	APlayableCharacter* DeadPlayer = Cast<APlayableCharacter>(PawnKilled);
+	if(DeadPlayer){
+		NotifyActorDeath(DeadPlayer);
+	}
+
 	AllPlayers.Remove(PawnKilled);
 
 	if(AllPlayers.Num() == 1) {
 		EndGame(AllPlayers[0]);
 	}
+}
+
+void ADynamiteBrosGameMode::NotifyActorDeath(APlayableCharacter* DeadPlayer) {
+	OnActorDeath.Broadcast(DeadPlayer);
 }
 
 void ADynamiteBrosGameMode::EndGame(AActor* Winner) {

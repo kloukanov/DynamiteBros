@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "DynamiteBrosGameMode.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorDeath, APlayableCharacter*, DeadPlayer);
+
 UCLASS(minimalapi)
 class ADynamiteBrosGameMode : public AGameModeBase
 {
@@ -27,6 +29,11 @@ public:
 
 	UFUNCTION(Blueprintcallable)
 	TArray<AActor*> GetAllPlayers() const;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnActorDeath OnActorDeath;
+
+	void NotifyActorDeath(APlayableCharacter* DeadPlayer);
 
 private:
 
