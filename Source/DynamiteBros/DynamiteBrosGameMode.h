@@ -35,6 +35,8 @@ public:
 
 	void NotifyActorDeath(APlayableCharacter* DeadPlayer);
 
+	void EnableInputForPlayers(bool bEnable);
+
 private:
 
 	FVector SpawnPoints[5] = { 
@@ -54,6 +56,11 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget> HUDScreen;
+
+	class UUserWidget* StartMatch;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> StartMatchScreen;
 
 	class UUserWidget* PauseGameWidget;
 

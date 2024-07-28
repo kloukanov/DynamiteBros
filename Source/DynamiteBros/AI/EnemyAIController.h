@@ -28,4 +28,11 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = AI)
 	bool IsAIStuck = false;
+
+public:
+
+	void EnableAI();
+
+	void DisableAI();
+
 };

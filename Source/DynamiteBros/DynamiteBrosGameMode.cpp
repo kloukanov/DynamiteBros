@@ -9,6 +9,7 @@
 #include "DBGameInstance.h"
 #include "LevelManager.h"
 #include "PlayableCharacterAssets.h"
+#include "EngineUtils.h"
 
 ADynamiteBrosGameMode::ADynamiteBrosGameMode()
 {
@@ -40,6 +41,10 @@ void ADynamiteBrosGameMode::BeginPlay()
 			FString PlayerName = FString("Player Number ");
 			PlayerName.AppendInt(i + 1);
 			Enemy->SetUpCharacter(PlayerName, TempColorArr[i]);
+			// AEnemyAIController* EnemyController = Cast<AEnemyAIController>(Enemy->GetController());
+			// if(EnemyController){
+			// 	EnemyController->DisableAI();
+			// }
 		}
 
 		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
@@ -52,6 +57,7 @@ void ADynamiteBrosGameMode::BeginPlay()
 				PlayableCharacter->ChangeCharacterMesh(GameInstance->GetSelectedCharacterMesh());
 				PlayableCharacter->SetPlayerIcon(GameInstance->GetSelectedCharacterIcon());
 				PlayableCharacter->SetUpCharacter("Player", GameInstance->GetExplosionColor());
+				PlayableCharacter->DisableInput(PlayerController);
 			}
 		}
 
@@ -61,6 +67,12 @@ void ADynamiteBrosGameMode::BeginPlay()
 	if(HUD){
         HUD->AddToViewport();
     }
+
+	StartMatch = CreateWidget(GetWorld(), StartMatchScreen);
+
+	if(StartMatch){
+		StartMatch->AddToViewport();
+	}
 }
 
 
@@ -83,6 +95,21 @@ void ADynamiteBrosGameMode::PawnKilled(APawn* PawnKilled) {
 
 void ADynamiteBrosGameMode::NotifyActorDeath(APlayableCharacter* DeadPlayer) {
 	OnActorDeath.Broadcast(DeadPlayer);
+}
+
+void ADynamiteBrosGameMode::EnableInputForPlayers(bool bEnable) {
+
+	for (TActorIterator<AEnemyAIController> It(GetWorld()); It; ++It) {
+        AEnemyAIController* EnemyController = *It;
+        if (EnemyController) {
+            bEnable == true ? EnemyController->EnableAI() : EnemyController->DisableAI();
+        }
+    }
+
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	APlayableCharacter* PlayableCharacter = Cast<APlayableCharacter>(PlayerController->GetPawn());
+
+	bEnable == true ? PlayableCharacter->EnableInput(PlayerController) : PlayableCharacter->DisableInput(PlayerController);
 }
 
 void ADynamiteBrosGameMode::EndGame(AActor* Winner) {
