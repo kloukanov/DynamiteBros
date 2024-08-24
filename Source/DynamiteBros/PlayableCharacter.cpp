@@ -100,7 +100,7 @@ void APlayableCharacter::Move(const FInputActionValue& Value){
 void APlayableCharacter::Drop() {
 	
 	// if we have a dynamite to drop
-	if(DynamiteCount > 0){
+	if(bIsDead == false && DynamiteCount > 0){
 		FVector DynamiteSpawnPointLocation = DynamiteSpawnPoint->GetComponentLocation();
 		float RandomOffset = FMath::RandRange(0.f, 90.f);
 		FRotator DynamiteSpawnPointRotation = DynamiteSpawnPoint->GetComponentRotation() + FRotator(0, RandomOffset, 0);
