@@ -36,6 +36,11 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screens", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UUserWidget> LoadingLevelScreen;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Screens", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UUserWidget> OptionsScreen;
+
+	class UUserWidget* OptionsMenu;
+
 public:
 
 	virtual void Init() override;
@@ -69,5 +74,8 @@ public:
 	TArray<FPlayableCharacterAssets> GetSpecifiedNumberOfCharacterMeshes(int Number) const;
 
 	TArray<FLinearColor> GetAllColorsExceptSelected() const;
+
+	UFUNCTION(Blueprintcallable)
+	void GoToOptionsMenuScreen();
 	
 };

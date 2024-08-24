@@ -1,6 +1,7 @@
 #include "DBGameInstance.h"
 #include "LevelManager.h"
 #include "PlayableCharacterAssets.h"
+#include "Blueprint/UserWidget.h"
 
 void UDBGameInstance::Init() {
     Super::Init();
@@ -86,4 +87,9 @@ TArray<FLinearColor> UDBGameInstance::GetAllColorsExceptSelected() const {
     TArray<FLinearColor> TempArr = PossibleColors;
     TempArr.Remove(ExplosionColor);
     return TempArr;
+}
+
+void UDBGameInstance::GoToOptionsMenuScreen() {
+    OptionsMenu = CreateWidget(GetWorld(), OptionsScreen);
+    OptionsMenu->AddToViewport();
 }
