@@ -5,10 +5,14 @@
 void UOptionsMenuUserWidget::NativeConstruct() {
     Super::NativeConstruct();
 
-    // TODO: update to read from saved settings
     UGameUserSettings* UserSettings = UGameUserSettings::GetGameUserSettings();
     int level = UserSettings->GetOverallScalabilityLevel();
     UE_LOG(LogTemp, Warning, TEXT("the current level is %d"), level);
+    if(level == -1) { 
+        level = 3; 
+        // set default setting
+        SetCurrentGraphicSetting(level);
+    }
     CurrentGraphicSetting = (GraphicsSettings) level;
 }
 
